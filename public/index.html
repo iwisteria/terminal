@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>ターミナルツール集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        header p {
+            margin-top: 0.5rem;
+            font-size: 1rem;
+            opacity: 0.85;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #718096;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .card-link {
+            margin-top: 1.25rem;
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.15s ease;
+        }
+
+        .card-link:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            main {
+                margin: 1.5rem auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ターミナルツール集</h1>
+        <p>コマンドライン・ショートカット関連リファレンス</p>
+    </header>
+
+    <main>
+        <div class="card">
+            <div class="card-icon">&#x1F4BB;</div>
+            <h2>ターミナルコマンド集</h2>
+            <p>よく使うコマンドをカテゴリ別に整理。ファイル操作・検索・アーカイブ・ネットワーク等を網羅。</p>
+            <a class="card-link" href="pages/terminal-commands.html">開く</a>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">&#x2328;&#xFE0F;</div>
+            <h2>Mac キーボードショートカット</h2>
+            <p>作業効率を上げる Mac の標準ショートカット一覧。システム・Finder・テキスト編集など。</p>
+            <a class="card-link" href="pages/mac-keyboard-shortcuts.html">開く</a>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">&#x25B6;&#xFE0F;</div>
+            <h2>YouTube 動画ダウンロード</h2>
+            <p>yt-dlp を使った動画・音声ダウンロードのコマンド集。各種オプションと使い方を解説。</p>
+            <a class="card-link" href="pages/youtube-download.html">開く</a>
+        </div>
+    </main>
+</body>
+</html>

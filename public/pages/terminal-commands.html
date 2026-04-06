@@ -1,0 +1,2949 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>ターミナルコマンド集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .last-update {
+            color: #718096;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #2d3748;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #4299e1;
+        }
+
+        .command-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .command-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .command-title {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .command-desc {
+            color: #718096;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .code-wrapper {
+            position: relative;
+            margin-top: 0.5rem;
+        }
+
+        .command-code {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-break: break-all;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .copy-button:hover {
+            background-color: #3182ce;
+        }
+
+        .copy-button.copied {
+            background-color: #38a169;
+        }
+
+        .alias-tag {
+            display: inline-block;
+            background-color: #edf2f7;
+            color: #4299e1;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        .category-heading {
+            font-size: 1.4rem;
+            color: #2d3748;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #cbd5e0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .category-heading:first-of-type {
+            margin-top: 0;
+        }
+
+        .category-icon {
+            font-size: 1.6rem;
+        }
+
+        .info-box {
+            background-color: #e6fffa;
+            border-left: 4px solid #38b6a8;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #234e52;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box p {
+            color: #2d3748;
+        }
+
+        .toc {
+            background-color: #f7fafc;
+            border-left: 4px solid #cbd5e0;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+        }
+
+        .toc h3 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc a {
+            color: #4299e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .toc a:hover {
+            color: #3182ce;
+            text-decoration: underline;
+        }
+
+        .shortcut-button {
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .shortcut-button:hover {
+            background-color: #3182ce;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #718096;
+            transition: color 0.3s ease;
+            padding: 0;
+        }
+
+        .modal-close:hover {
+            color: #2d3748;
+        }
+
+        .modal-body {
+            padding: 2rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-body .shortcut-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .modal-body .shortcut-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .shortcut-key {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-weight: 600;
+            display: inline-block;
+            margin-right: 0.75rem;
+        }
+
+        .shortcut-description {
+            color: #718096;
+            font-size: 0.95rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            text-align: right;
+        }
+
+        .modal-footer button {
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .modal-footer button:hover {
+            background-color: #3182ce;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .section h2 {
+                font-size: 1.4rem;
+            }
+
+            .command-code {
+                font-size: 0.8rem;
+            }
+
+            .copy-button {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-height: 90vh;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+            }
+
+            .modal-header {
+                padding: 1rem;
+            }
+
+            .modal-footer {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ターミナルコマンド集</h1>
+            <p>よく使うコマンドとエイリアスのリファレンス</p>
+            <div class="last-update">更新: 2026-03-28 11:00</div>
+        </div>
+
+        <div class="toc">
+            <h3>📑 目次</h3>
+            <ul>
+                <li><a href="#aliases">エイリアス一覧</a>
+                    <ul>
+                        <li><a href="#software-management">ソフトウェア管理</a></li>
+                        <li><a href="#image-conversion">画像変換</a></li>
+                        <li><a href="#video-processing">動画処理</a></li>
+                        <li><a href="#printing">印刷</a></li>
+                        <li><a href="#compression">圧縮・解凍</a></li>
+                        <li><a href="#pdf-processing">PDF処理</a></li>
+                        <li><a href="#audio-processing">音声処理</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>📌 使い方</h3>
+            <p>以下のコマンドはターミナルで実行してください。コードの右上の「コピー」ボタンをクリックするとクリップボードにコピーできます。</p>
+            <button class="shortcut-button" onclick="openShortcutModal()">🎮 Macターミナルショートカットを見る</button>
+        </div>
+
+        <!-- エイリアス一覧 -->
+        <div class="section" id="aliases">
+            <h2>エイリアス一覧</h2>
+
+            <!-- ソフトウェア管理 -->
+            <div class="category-heading" id="software-management">
+                <span class="category-icon">⚙️</span>
+                <span>ソフトウェア管理</span>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">update-java</div>
+                <div class="command-desc">Javaの自動インストール・更新</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">update-java</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('updateJavaModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">brew autoremove</div>
+                <div class="command-desc">不要な依存パッケージを自動削除。パッケージをアンインストールした時に、それに依存していなかった他のパッケージが残ることがあるので、それを自動削除してくれます</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">brew autoremove</pre>
+                </div>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">brew cleanup</div>
+                <div class="command-desc">古いバージョンのキャッシュを削除。容量を節約したければ定期的に実行するといいです</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">brew cleanup</pre>
+                </div>
+            </div>
+
+            <!-- 画像変換 -->
+            <div class="category-heading" id="image-conversion">
+                <span class="category-icon">🖼️</span>
+                <span>画像変換</span>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">herowebp</div>
+                <div class="command-desc">3サイズのWebP画像（1920x1080、1200x675、800x450）のヒーロー画像を生成</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">herowebp</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('herowebpModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">webp50</div>
+                <div class="command-desc">画像をWebpに変換（effort=6 quality=50で）</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">webp50</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('webp50Modal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">webpmax</div>
+                <div class="command-desc">jpg, jpeg, png, heic形式の画像を最高品質のWebP形式に変換</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">webpmax</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('webpmaxModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">img2jpeg</div>
+                <div class="command-desc">画像をJPEGに変換（長辺1080px）</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">img2jpeg</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('img2jpegModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">img2webp</div>
+                <div class="command-desc">editing フォルダ内の画像ファイル（png, jpeg, jpg）を180px四方のWebpファイルに変換</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">img2webp</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('img2webpModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">genicon</div>
+                <div class="command-desc">editing フォルダ内の画像ファイル（png, jpeg, jpg）を32px、180px、256px四方の3種類のWebpアイコンに一度に生成</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">genicon</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('geniconModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">hrsz</div>
+                <div class="command-desc">HEIC画像を正規化サイズにリサイズ・トリム。向きに応じて2480x3508または3508x2480に自動調整。フォルダを右クリックして新規ターミナルでフォルダに移動し、使用します</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">hrsz</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('hrszModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">hrsz500</div>
+                <div class="command-desc">画像を 500x500 ピクセル、72 PPI に統一して iTunes アートワーク用に変換。下位フォルダ内のファイルも含めて全て処理。元のJPEG/PNGはデスクトップの original_images フォルダに移動。処理完了ファイルは output フォルダに出力</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">hrsz500</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('hrsz500Modal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <!-- 動画処理 -->
+            <div class="category-heading" id="video-processing">
+                <span class="category-icon">🎬</span>
+                <span>動画処理</span>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">mv</div>
+                <div class="command-desc">カレントディレクトリの動画ファイル（mp4）を1つのmp4ファイルに結合</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">mv</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('mvModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">v2p</div>
+                <div class="command-desc">m4vファイルをmp4ファイルに劣化なしで変換（再エンコードなし）</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">v2p</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('v2pModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">Instagram動画ダウンロード（yt-dlp）</div>
+                <div class="command-desc">MacのターミナルでInstagramの動画をダウンロード。yt-dlpを使用して最高品質で保存</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">yt-dlp "URL"</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('instagramDownloadModal')" style="margin-top: 1rem;">📖 ガイドの詳細を見る</button>
+            </div>
+
+            <!-- 印刷 -->
+            <div class="category-heading" id="printing">
+                <span class="category-icon">🖨️</span>
+                <span>印刷</span>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">h2p</div>
+                <div class="command-desc">HEIC形式の画像をJPG に変換してSHARPカラープリンタで印刷。自動向き判定と用紙いっぱい印刷に対応</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">h2p</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('h2pModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">printpdfbw</div>
+                <div class="command-desc">カレントディレクトリ内のすべてのPDFファイルを白黒（グレースケール）で100%スケーリング印刷</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">printpdfbw</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('printpdfbwModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">printpdfcolor</div>
+                <div class="command-desc">カレントディレクトリ内のすべてのPDFファイルをカラー（RGB）で100%スケーリング印刷</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">printpdfcolor</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('printpdfcolorModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <!-- 圧縮・解凍 -->
+            <div class="category-heading" id="compression">
+                <span class="category-icon">📦</span>
+                <span>圧縮・解凍</span>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">zp (zipthis_cp932)</div>
+                <div class="command-desc">カレントディレクトリをCP932（Windows互換）でZIP化。Windowsで日本語ファイル名が文字化けしないZIPファイルを作成します</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">zp</pre>
+                </div>
+                <div class="alias-tag">使い方: 圧縮したいフォルダで右クリック → 「フォルダに新規ターミナル」を選択して「zp」と入力</div>
+                <button class="shortcut-button" onclick="openModal('zpModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">folder2zip</div>
+                <div class="command-desc">Desktop内の指定フォルダをCP932（Windows互換）でZIP化します</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">folder2zip フォルダ名</pre>
+                </div>
+                <div class="alias-tag">使用方法: ~/Desktop/ 内のフォルダを指定して CP932 でZIP化</div>
+                <button class="shortcut-button" onclick="openModal('folder2zipModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">zpcp932</div>
+                <div class="command-desc">カレントディレクトリ自体をCP932（Windows互換）でZIP化します</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">zpcp932</pre>
+                </div>
+                <div class="alias-tag">使用方法: カレントディレクトリ自体を CP932 でZIP化（ZIPは親ディレクトリに作成）</div>
+                <button class="shortcut-button" onclick="openModal('dir2zipCp932Modal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="info-box" style="margin-top: 1.5rem; background-color: #fffaf0; border-left-color: #ed8936;">
+                <h3 style="color: #7c2d12;">💡 CP932エンコーディングについて</h3>
+                <p style="color: #2d3748; margin-bottom: 0.5rem;">Python の zipfile モジュールを使用してCP932（Shift JIS）エンコーディングで ZIP ファイルを作成します。</p>
+                <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>特徴:</strong></p>
+                <ul style="margin-left: 1.5rem; color: #2d3748;">
+                    <li>✅ Windows Explorer で日本語ファイル名が正常に表示</li>
+                    <li>✅ 日本語フォルダ名にも対応</li>
+                    <li>✅ 元のフォルダ構造を保持</li>
+                    <li>✅ 特殊文字（㈱、①②③など）にも対応</li>
+                </ul>
+            </div>
+
+            <!-- PDF処理 -->
+            <div class="category-heading" id="pdf-processing">
+                <span class="category-icon">📄</span>
+                <span>PDF処理</span>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">splitpdf</div>
+                <div class="command-desc">カレントディレクトリのPDFをページごとに分割</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">splitpdf</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('splitpdfModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">pdf2webp</div>
+                <div class="command-desc">カレントディレクトリのPDFをWebp画像に変換（圧縮努力度6、品質50）</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">pdf2webp</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('pdf2webpModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">pdf2png</div>
+                <div class="command-desc">PDFをPNG画像に変換（解像度300dpi、品質85%）</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">pdf2png</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('pdf2pngModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">gakuhu</div>
+                <div class="command-desc">カレントディレクトリの画像ファイルをPiascore用にJPEG圧縮してPDFに変換（解像度120dpi、品質75%）</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">gakuhu</pre>
+                </div>
+                <div class="alias-tag">使用方法: カレントディレクトリの画像ファイルを自動的にPiascore用PDFに変換</div>
+                <button class="shortcut-button" onclick="openModal('gakuhuModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">pdftit</div>
+                <div class="command-desc">フォルダ内の全PDFファイルのタイトルメタデータをファイル名に一括変更</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">pdftit</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('pdftitModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">pdfprt</div>
+                <div class="command-desc">フォルダ内の全PDFを白黒・A4・100%で一括印刷</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">pdfprt</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('pdfprtModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <!-- 音声処理 -->
+            <div class="category-heading" id="audio-processing">
+                <span class="category-icon">🎵</span>
+                <span>音声処理</span>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">mp3combine</div>
+                <div class="command-desc">カレントディレクトリのmp3ファイルを1つのmp3ファイルに結合</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">mp3combine</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('mp3combineModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+        </div>
+
+        <!-- update-javaエイリアス詳細モーダル -->
+        <div id="updateJavaModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>☕ update-javaエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">update-java</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">Apple Silicon（M1/M2）とIntel Macを自動判定し、適切なJavaをインストール・更新するコマンドです。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">update-java</code>コマンドを実行</li>
+                            <li>システムのアーキテクチャが自動判定される</li>
+                            <li>該当するJavaをインストール・更新</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 特徴</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>Apple Silicon (ARM64)とIntel (x86_64)を自動判定</li>
+                        <li>各アーキテクチャに最適なJavaをインストール</li>
+                        <li>既にインストール済みの場合は更新を実行</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">update-java() {
+  if [ -d "/opt/homebrew/opt/openjdk" ]; then
+    echo "Apple Silicon Macとして実行"
+    brew install openjdk && sudo ln -sfn /opt/homebrew/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk && echo "export PATH=\"/opt/homebrew/opt/openjdk/bin:\$PATH\"" >> ~/.zshrc && source ~/.zshrc && java -version
+  else
+    echo "Intel Macとして実行"
+    brew install openjdk && sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk && echo "export PATH=\"/usr/local/opt/openjdk/bin:\$PATH\"" >> ~/.zshrc && source ~/.zshrc && java -version
+  fi
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- herowebpエイリアス詳細モーダル -->
+        <div id="herowebpModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ herowebpエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">herowebp</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">jpg/jpeg/png/heic形式の画像を3つのサイズのWebP形式に自動変換します。ヒーロー画像などレスポンシブで複数サイズが必要な場合に便利です。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>カレントディレクトリの画像を配置</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">herowebp</code>コマンドを実行</li>
+                            <li>以下の3サイズのWebP画像が自動生成されます：
+                                <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                                    <li>1920x1080px</li>
+                                    <li>1200x675px</li>
+                                    <li>800x450px</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 対応形式</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>入力形式: jpg, jpeg, png, heic</li>
+                        <li>出力形式: WebP (複数サイズ)</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">herowebp() {
+  local quality=50
+  local method=6
+  if [ ! -d "$HOME/editing" ]; then
+    echo "Error: ~/editing directory not found"
+    return 1
+  fi
+  cd "$HOME/editing" || return 1
+  for img in *.{jpg,jpeg,png,heic}; do
+    if [ -f "$img" ]; then
+      base="${img%.*}"
+      echo "Processing: $img"
+      magick "$img" -resize 1920x1080 -quality $quality -define webp:method=$method "${base}_1920x1080.webp"
+      magick "$img" -resize 1200x675 -quality $quality -define webp:method=$method "${base}_1200x675.webp"
+      magick "$img" -resize 800x450 -quality $quality -define webp:method=$method "${base}_800x450.webp"
+      echo "✓ Generated WebP files for: $img"
+    fi
+  done
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- webp50エイリアス詳細モーダル -->
+        <div id="webp50Modal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ webp50エイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">webp50</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">jpg/jpeg/png/heic形式を自動検出して、高圧縮率のWebPに変換します。品質50とmethod=6（最高品質の圧縮）で最適なバランスを実現します。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>カレントディレクトリの画像を配置</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">webp50</code>コマンドを実行</li>
+                            <li>同じフォルダにWebP形式の画像が生成されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 圧縮オプション</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">quality=50</code>: 品質レベル (0-100、50は標準的な圧縮)</li>
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">method=6</code>: 圧縮方法 (0-6、6は最高品質)</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">webp50() {
+  local quality=50
+  local method=6
+  local count=0
+  if [ ! -d "$HOME/editing" ]; then
+    echo "Error: ~/editing directory not found"
+    return 1
+  fi
+  cd "$HOME/editing" || return 1
+  for file in *.{jpg,jpeg,png,heic}; do
+    if [ -f "$file" ]; then
+      local base="${file%.*}"
+      if [ -f "${base}.webp" ]; then
+        echo "⊘ Already exists: ${base}.webp (skipped)"
+        continue
+      fi
+      echo "Converting: $file → ${base}.webp"
+      magick "$file" -quality $quality -define webp:method=$method "${base}.webp"
+      if [ $? -eq 0 ]; then
+        echo "✓ Converted: $file"
+        ((count++))
+      else
+        echo "✗ Failed to convert: $file"
+      fi
+    fi
+  done
+  echo ""
+  if [ $count -gt 0 ]; then
+    echo "✓ Successfully converted $count file(s) to WebP"
+  else
+    echo "⊘ No new files to convert"
+  fi
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- webpmaxエイリアス詳細モーダル -->
+        <div id="webpmaxModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ webpmaxエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">webpmax</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">jpg/jpeg/png/heic形式を自動検出して、最高品質のWebPに変換します。品質100とmethod=6（最高品質の圧縮）で、ロスレスに近い高品質を実現します。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>カレントディレクトリの画像を配置</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">webpmax</code>コマンドを実行</li>
+                            <li>同じフォルダに最高品質のWebP形式の画像が生成されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 圧縮オプション</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">quality=100</code>: 最高品質 (0-100、100は最高品質を保持)</li>
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">method=6</code>: 圧縮方法 (0-6、6は最高品質)</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">webpmax() {
+  local quality=100
+  local method=6
+  local count=0
+  if [ ! -d "$HOME/editing" ]; then
+    echo "Error: ~/editing directory not found"
+    return 1
+  fi
+  cd "$HOME/editing" || return 1
+  for file in *.{jpg,jpeg,png,heic}; do
+    if [ -f "$file" ]; then
+      local base="${file%.*}"
+      if [ -f "${base}.webp" ]; then
+        echo "⊘ Already exists: ${base}.webp (skipped)"
+        continue
+      fi
+      echo "Converting: $file → ${base}.webp"
+      magick "$file" -quality $quality -define webp:method=$method "${base}.webp"
+      if [ $? -eq 0 ]; then
+        echo "✓ Converted: $file"
+        ((count++))
+      else
+        echo "✗ Failed to convert: $file"
+      fi
+    fi
+  done
+  echo ""
+  if [ $count -gt 0 ]; then
+    echo "✓ Successfully converted $count file(s) to WebP"
+  else
+    echo "⊘ No new files to convert"
+  fi
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- img2jpegエイリアス詳細モーダル -->
+        <div id="img2jpegModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ img2jpegエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">img2jpeg</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">複数の画像形式をJPEGに統一して変換します。長辺を1080pxにリサイズするため、ウェブ用途に最適なサイズになります。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>カレントディレクトリの画像を配置</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">img2jpeg</code>コマンドを実行</li>
+                            <li>同じフォルダにJPEG形式（長辺1080px）の画像が生成されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 変換設定</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>出力形式: JPEG</li>
+                        <li>最大長辺: 1080px</li>
+                        <li>アスペクト比: 維持</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">img2jpeg() {
+  setopt nullglob
+  local count=0
+  local failed=0
+  local total=0
+
+  for file in *.tiff *.tif *.png *.jpeg *.jpg *.heic; do
+    [ -f "$file" ] || continue
+    local base="${file%.*}"
+    ((total++))
+
+    echo "Converting: $file → ${base}.jpg"
+    sips -s format jpeg -Z 1080 "$file" --out "${base}.jpg" &>/dev/null
+
+    if [ $? -eq 0 ]; then
+      echo "✓ $(basename "$file")"
+      ((count++))
+    else
+      echo "✗ $(basename "$file")"
+      ((failed++))
+    fi
+  done
+
+  echo ""
+  if [ $total -eq 0 ]; then
+    echo "⊘ No image files found (tiff, tif, png, jpeg, jpg, heic)"
+  elif [ $count -gt 0 ]; then
+    echo "✓ Successfully converted $count file(s) to JPEG"
+  fi
+  if [ $failed -gt 0 ]; then
+    echo "✗ Failed to convert $failed file(s)"
+  fi
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- img2webpエイリアス詳細モーダル -->
+        <div id="img2webpModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ img2webpエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">img2webp</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">editing フォルダ内のPNG/JPEG/JPGファイルを180x180pxのWebP形式に変換します。アイコンやサムネイル用途に最適です。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>カレントディレクトリの画像を配置</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">img2webp</code>コマンドを実行</li>
+                            <li>同じフォルダに180x180pxのWebP画像が生成されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 変換設定</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>サイズ: 180x180px (正方形)</li>
+                        <li>出力形式: WebP</li>
+                        <li>対応入力形式: PNG, JPEG, JPG</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">img2webp='for f in ~/editing/*.{png,jpeg,jpg}; do [ -f "$f" ] && cwebp -resize 180 180 -m 6 -q 50 "$f" -o "${f%.*}.webp" && echo "✓ $(basename "$f")" || echo "✗ $(basename "$f")"; done'</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- geniconエイリアス詳細モーダル -->
+        <div id="geniconModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ geniconエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">genicon</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">editing フォルダ内のPNG画像から、3種類のサイズのアイコンを一度に生成します。ウェブサイトやアプリケーションで必要なすべてのアイコンサイズを自動作成できます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>カレントディレクトリのPNG画像を配置</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">genicon</code>コマンドを実行</li>
+                            <li>以下の3種類のWebPアイコンが同じフォルダに生成されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 生成されるサイズ</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>256x256px (大サイズ / ファビコン用)</li>
+                        <li>180x180px (中サイズ / スマートフォン用)</li>
+                        <li>32x32px (小サイズ / 補助的なアイコン用)</li>
+                    </ul>
+                    <p style="color: #718096; margin-top: 1rem;">※ すべてWebP形式で出力されます</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">generateicons() {
+  if [ ! -d "$HOME/editing" ]; then
+    echo "✗ エラー: ~/editing ディレクトリが見つかりません"
+    return 1
+  fi
+  cd "$HOME/editing" || return 1
+  local count=0
+  for file in *.png; do
+    if [ -f "$file" ]; then
+      local base="${file%.*}"
+      echo "処理中: $file"
+      magick "$file" -resize 256x256 "${base}_256x256.png"
+      magick "$file" -resize 180x180 "${base}_180x180.png"
+      magick "$file" -resize 32x32 "${base}_32x32.png"
+      echo "✓ ${base}_256x256.png"
+      echo "  ✓ ${base}_180x180.png"
+      echo "  ✓ ${base}_32x32.png"
+      ((count++))
+    fi
+  done
+  echo ""
+  if [ $count -gt 0 ]; then
+    echo "✓ 完了: $count ファイルの変換が完了しました"
+  else
+    echo "⊘ PNG ファイルが見つかりません"
+  fi
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- h2pエイリアス詳細モーダル -->
+        <div id="h2pModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖨️ h2pエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">h2p</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 機能説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">HEIC形式の画像をJPG形式に変換してから、SHARPカラープリンタで自動的にカラー印刷します。画像の向き（縦横）を自動判定し、用紙に最適な方向で印刷します。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <p style="color: #2d3748; margin-bottom: 1rem;"><strong>基本的な使用手順：</strong></p>
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>印刷したい HEIC ファイルがあるフォルダでターミナルを開く（またはカレントディレクトリに HEIC ファイルを配置）</li>
+                            <li>必要に応じて <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">hrsz()</code> で画像をトリム・リサイズ（2480x3508 または 3508x2480）</li>
+                            <li>ターミナルで <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">h2p</code> を実行</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔄 処理フロー</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li><strong>HEIC → JPG 変換</strong>：ImageMagick (magick) を使用して自動回転対応で変換</li>
+                        <li><strong>画像サイズ判定</strong>：変換後のJPGサイズから向きを自動判定
+                            <ul style="margin-left: 1.5rem;">
+                                <li>横長（幅 &gt; 高さ）→ 横向き印刷</li>
+                                <li>縦長（幅 ≤ 高さ）→ 縦向き印刷</li>
+                            </ul>
+                        </li>
+                        <li><strong>用紙いっぱい印刷</strong>：fit-to-page オプションで拡大印刷</li>
+                        <li><strong>カラー印刷</strong>：ColorModel=RGB を指定</li>
+                        <li><strong>自動クリーンアップ</strong>：印刷完了後、一時JPGファイルを削除</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 エイリアス定義</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">h2p() {
+  setopt nullglob
+  for file in ./*.heic; do
+    [ -f "$file" ] || continue
+    jpg="${file%.heic}.jpg"
+    if ! magick "$file" -auto-orient "$jpg"; then
+      echo "✗ エラー: $(basename "$file") の変換に失敗"
+      rm -f "$jpg"
+      continue
+    fi
+    dimensions=$(magick identify -format "%w %h" "$jpg")
+    width=$(echo $dimensions | cut -d' ' -f1)
+    height=$(echo $dimensions | cut -d' ' -f2)
+    if [ "$width" -gt "$height" ]; then
+      orientation=4
+    else
+      orientation=3
+    fi
+    if lp -d SHARP_BP_60C26__3504320300_ -o ColorModel=RGB -o fit-to-page -o orientation-requested=$orientation "$jpg" &>/dev/null; then
+      sleep 3
+      rm -f "$jpg"
+      echo "✓ 処理完了: $(basename "$file")"
+    else
+      echo "✗ エラー: $(basename "$file") の印刷に失敗"
+      rm -f "$jpg"
+    fi
+  done
+}</pre>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📚 関連コマンド</h3>
+                    <p style="color: #718096; margin-bottom: 0.5rem;"><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">hrsz</code> - HEIC画像の前処理用エイリアス。画像を指定サイズ（2480x3508 または 3508x2480）にリサイズ・トリムして output/ に出力します。<button onclick="closeModal(); openModal('hrszModal')" style="margin-left: 0.5rem; padding: 0.3rem 0.6rem; background-color: #4299e1; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">詳細を見る</button></p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💻 使用例</h3>
+                    <div class="info-box" style="background-color: #f7fafc; border-left-color: #4299e1;">
+                        <p style="color: #2d3748; margin-bottom: 1rem;"><strong>例1: 前処理なしで直接印刷</strong></p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem; margin-bottom: 1rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">$ cd <HEICファイルがあるフォルダ>
+$ h2p
+✓ 処理完了: photo1.heic
+✓ 処理完了: photo2.heic</pre>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="background-color: #f7fafc; border-left-color: #4299e1;">
+                        <p style="color: #2d3748; margin-bottom: 1rem;"><strong>例2: hrsz() で前処理してから印刷</strong></p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">$ cd <画像フォルダ>
+$ hrsz
+✓ output/ に処理済み画像を生成
+$ cd output/
+$ h2p
+✓ 処理完了: resized_photo.heic</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- hrszエイリアス詳細モーダル -->
+        <div id="hrszModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ hrszエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">hrsz</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 機能説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">HEIC形式の画像を正規化サイズにリサイズ・トリムします。画像の向き（縦横）を自動判定し、アスペクト比を損なわないように中央からトリムして、3508x2480 または 2480x3508 のサイズに統一します。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <p style="color: #2d3748; margin-bottom: 1rem;"><strong>基本的な使用手順：</strong></p>
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>HEIC ファイルがあるフォルダで hrsz を実行</li>
+                            <li>画像の向きに応じて自動的にサイズを決定</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">output/</code> フォルダに処理済み画像を出力</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔄 処理フロー</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li><strong>サイズ判定</strong>：元画像の幅と高さを取得
+                            <ul style="margin-left: 1.5rem;">
+                                <li>横長（幅 &gt; 高さ）→ 3508x2480 にリサイズ・トリム</li>
+                                <li>縦長（幅 ≤ 高さ）→ 2480x3508 にリサイズ・トリム</li>
+                            </ul>
+                        </li>
+                        <li><strong>高品質リサイズ</strong>：-density 300 で 300 DPI に設定</li>
+                        <li><strong>中央トリム</strong>：-gravity Center で中央からトリム（アスペクト比を損なわない）</li>
+                        <li><strong>拡大対応</strong>：-resize ^ で小さい画像も拡大可能</li>
+                        <li><strong>ファイル保持</strong>：元のファイル名で output/ に出力</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 エイリアス定義</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">hrsz() {
+  output_dir="output"
+  mkdir -p "$output_dir"
+  for file in *.heic; do
+    width=$(magick identify -format "%w" "$file")
+    height=$(magick identify -format "%h" "$file")
+    if [ "$width" -gt "$height" ]; then
+      magick "$file" -density 300 -gravity Center -resize 3508x2480^ -crop 3508x2480+0+0 +repage "$output_dir/$file"
+    else
+      magick "$file" -density 300 -gravity Center -resize 2480x3508^ -crop 2480x3508+0+0 +repage "$output_dir/$file"
+    fi
+    echo "✓ 処理完了: $file"
+  done
+  echo "✅ 全ファイルが $output_dir フォルダに出力されました"
+}</pre>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📚 関連コマンド</h3>
+                    <p style="color: #718096; margin-bottom: 0.5rem;"><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">h2p</code> - 印刷用エイリアス。output/ フォルダの処理済み画像を JPEG に変換して SHARP カラープリンタで印刷します。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💻 使用例</h3>
+                    <div class="info-box" style="background-color: #f7fafc; border-left-color: #4299e1;">
+                        <p style="color: #2d3748; margin-bottom: 1rem;"><strong>例1: 複数の HEIC ファイルを処理</strong></p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem; margin-bottom: 1rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">$ cd <画像フォルダ>
+$ hrsz
+✓ 処理完了: photo1.heic
+✓ 処理完了: photo2.heic
+✓ 処理完了: photo3.heic
+✅ 全ファイルが output フォルダに出力されました</pre>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="background-color: #f7fafc; border-left-color: #4299e1;">
+                        <p style="color: #2d3748; margin-bottom: 1rem;"><strong>例2: hrsz で前処理して、h2p で印刷</strong></p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">$ cd <画像フォルダ>
+$ hrsz
+✅ 全ファイルが output フォルダに出力されました
+$ cp output/*.heic ~/editing/
+$ h2p
+✓ 処理完了: photo1.heic
+✓ 処理完了: photo2.heic</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚠️ 注意点</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>元の HEIC ファイルはそのまま保持されます（output/ フォルダに複製）</li>
+                        <li>小さい画像も拡大されるため、元の解像度が低い場合は品質が低下する可能性があります</li>
+                        <li>output/ フォルダがない場合は自動的に作成されます</li>
+                        <li>出力形式は元のファイル拡張子を保持します（HEIC → HEIC）</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔧 技術詳細</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-density 300</code>：300 DPI で高品質印刷対応</li>
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-gravity Center</code>：中央を基準にトリム</li>
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-resize ^</code>：小さい画像も拡大対応</li>
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-crop</code>：余白を均等に削除</li>
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">+repage</code>：トリム後の画像メタデータを更新</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- hrsz500エイリアス詳細モーダル -->
+        <div id="hrsz500Modal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ hrsz500エイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">hrsz500</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 機能説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">JPG/PNG/HEIC ファイルを 500x500 ピクセル、72 PPI に統一して iTunes アートワーク用に変換・リサイズします。下位フォルダ内のファイルも含めて全て処理します。背景色は白で統一され、不足部分は白で埋められます。元のJPEG/PNGファイルはデスクトップの <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">original_images</code> フォルダに移動され、処理完了ファイルは <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">output</code> フォルダに出力されます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <p style="color: #2d3748; margin-bottom: 1rem;"><strong>基本的な使用手順：</strong></p>
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>画像ファイルがあるフォルダで hrsz500 を実行</li>
+                            <li>フォルダ内および下位フォルダの全ての画像が処理される</li>
+                            <li>処理されたファイルは output フォルダに 500x500、72 PPI のHEIC形式で出力</li>
+                            <li>元のJPEG/PNGファイルは ~/Desktop/original_images/ に移動</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔄 処理フロー</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li><strong>ディレクトリ作成</strong>：~/Desktop/original_images と output フォルダを作成</li>
+                        <li><strong>JPEG/PNG処理</strong>：
+                            <ul style="margin-left: 1.5rem;">
+                                <li>500x500 ピクセルにリサイズ・クロップ（中心基準、背景色は白）</li>
+                                <li>72 PPI で HEIC形式に変換（品質75）</li>
+                                <li>output フォルダに出力</li>
+                                <li>元のファイルを original_images/ に移動</li>
+                            </ul>
+                        </li>
+                        <li><strong>既存HEIC処理</strong>：
+                            <ul style="margin-left: 1.5rem;">
+                                <li>500x500 ピクセルにリサイズ・クロップ（背景色は白）</li>
+                                <li>72 PPI で品質75に統一</li>
+                                <li>output フォルダに出力</li>
+                            </ul>
+                        </li>
+                        <li><strong>下位フォルダ対応</strong>：find コマンドで再帰的に全ファイルを処理</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 エイリアス定義</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">hrsz500() {
+  mkdir -p ~/Desktop/original_images
+  mkdir -p output
+
+  find . -type f \( -iname "*.jpeg" -o -iname "*.jpg" -o -iname "*.png" \) | while read file; do
+    filename=$(basename "$file" | sed 's/\.[^.]*$//')
+    output_file="output/${filename}.heic"
+    magick "$file" -resize 500x500 -gravity center -background white -extent 500x500 -density 72 -quality 75 "$output_file"
+    mv "$file" ~/Desktop/original_images/
+    echo "Converted & resized: $(basename "$file") → $(basename "$output_file") (original moved)"
+  done
+
+  find . -type f -iname "*.heic" | while read file; do
+    filename=$(basename "$file")
+    temp_file="output/${filename}.tmp"
+    magick "$file" -resize 500x500 -gravity center -background white -extent 500x500 -density 72 -quality 75 "$temp_file"
+    mv "$temp_file" "output/${filename}"
+    echo "Resized: output/$(basename "$file")"
+  done
+}</pre>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💻 使用例</h3>
+                    <div class="info-box" style="background-color: #f7fafc; border-left-color: #4299e1;">
+                        <p style="color: #2d3748; margin-bottom: 1rem;"><strong>例1: JPEG/PNG/HEICが混在したフォルダを処理</strong></p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem; margin-bottom: 1rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">$ cd ~/editing
+$ hrsz500
+Converted & resized: photo1.jpg → output/photo1.heic (original moved)
+Converted & resized: photo2.png → output/photo2.heic (original moved)
+Resized: output/photo3.heic</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚠️ 注意点</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>全ての処理済みファイルは output フォルダに出力されます</li>
+                        <li>元のJPEG/PNGファイルは ~/Desktop/original_images/ に移動されます</li>
+                        <li>既存のHEICファイルも500x500、72 PPIにリサイズされます</li>
+                        <li>長辺が500px以下の小さい画像は拡大されます</li>
+                        <li>正方形でない画像は中央からクロップされ、不足部分は白で埋められます</li>
+                        <li>下位フォルダ内のファイルも再帰的に処理されます</li>
+                        <li>quality 75 で圧縮されるため、完全な無損失ではありません</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔧 技術詳細</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-resize 500x500</code>：アスペクト比を保持してリサイズ</li>
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-gravity center</code>：中央を基準にクロップ・配置</li>
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-background white</code>：背景色を白に設定</li>
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-extent 500x500</code>：500x500のキャンバスに配置</li>
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-density 72</code>：72 PPI (ピクセルパーインチ) に設定</li>
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-quality 75</code>：品質75で圧縮</li>
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">find . -type f</code>：カレントディレクトリと下位フォルダの全ファイルを再帰的に処理</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📦 必要なツール</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li><strong>ImageMagick</strong>：<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">brew install imagemagick</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- printpdfbwエイリアス詳細モーダル -->
+        <div id="printpdfbwModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖨️ printpdfbwエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">printpdfbw</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリ内のすべてのPDFファイルを白黒（グレースケール）で100%スケーリング印刷します。成功時は処理完了メッセージが表示され、PDFが見つからない場合はエラーメッセージが表示されます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>印刷したいPDFファイルが配置されているフォルダで、ターミナルを開く</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">printpdfbw</code>コマンドを実行</li>
+                            <li>すべてのPDFファイルが白黒で印刷キューに追加されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 印刷設定</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>印刷色: 白黒（グレースケール）</li>
+                        <li>スケーリング: 100%</li>
+                        <li>処理対象: カレントディレクトリ内のすべてのPDF</li>
+                        <li>プリンタ: SHARP_BP_60C26__3504320300_</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 実装コード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">printpdfbw() {
+  local count=0
+  local found=0
+
+  for pdf in *.pdf; do
+    if [ -f "$pdf" ]; then
+      found=1
+      lp -d SHARP_BP_60C26__3504320300_ -o ColorModel=Gray -o scaling=100 "$pdf"
+      echo "✓ 印刷中: $pdf"
+      ((count++))
+    fi
+  done
+
+  if [ $found -eq 0 ]; then
+    echo "✗ エラー: カレントディレクトリに PDF ファイルが見つかりません"
+    return 1
+  fi
+
+  echo ""
+  echo "✅ 完了: $count 個の PDF ファイルを白黒で印刷キューに追加しました"
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- printpdfcolorエイリアス詳細モーダル -->
+        <div id="printpdfcolorModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖨️ printpdfcolorエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">printpdfcolor</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリ内のすべてのPDFファイルをカラー（RGB）で100%スケーリング印刷します。成功時は処理完了メッセージが表示され、PDFが見つからない場合はエラーメッセージが表示されます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>印刷したいPDFファイルが配置されているフォルダで、ターミナルを開く</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">printpdfcolor</code>コマンドを実行</li>
+                            <li>すべてのPDFファイルがカラーで印刷キューに追加されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 印刷設定</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>印刷色: カラー（RGB）</li>
+                        <li>スケーリング: 100%</li>
+                        <li>処理対象: カレントディレクトリ内のすべてのPDF</li>
+                        <li>プリンタ: SHARP_BP_60C26__3504320300_</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 実装コード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">printpdfcolor() {
+  local count=0
+  local found=0
+
+  for pdf in *.pdf; do
+    if [ -f "$pdf" ]; then
+      found=1
+      lp -d SHARP_BP_60C26__3504320300_ -o ColorModel=RGB -o scaling=100 "$pdf"
+      echo "✓ 印刷中: $pdf"
+      ((count++))
+    fi
+  done
+
+  if [ $found -eq 0 ]; then
+    echo "✗ エラー: カレントディレクトリに PDF ファイルが見つかりません"
+    return 1
+  fi
+
+  echo ""
+  echo "✅ 完了: $count 個の PDF ファイルをカラーで印刷キューに追加しました"
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- zpエイリアス詳細モーダル -->
+        <div id="zpModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📦 zpエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">zp</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリをCP932（Windows互換）エンコーディングでZIP化します。Windowsで日本語ファイル名が文字化けしないZIPファイルを作成するために最適です。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>圧縮したいフォルダで右クリック</li>
+                            <li>「フォルダに新規ターミナル」を選択</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">zp</code>と入力</li>
+                            <li>カレントディレクトリが1つのZIPファイルに圧縮されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 特徴</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>エンコーディング: CP932（Windows互換）</li>
+                        <li>日本語ファイル名: 文字化けしない</li>
+                        <li>日本語フォルダ名: 対応</li>
+                        <li>特殊文字対応: ㈱、①②③など</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">zipthis_cp932() {
+  local FOLDER_NAME=$(basename "$PWD")
+  local OUTPUT_NAME="${1:-$FOLDER_NAME.zip}"
+  local output_dir=$(dirname "$PWD")
+  python3 << PYTHON_EOF
+import zipfile
+import os
+import sys
+
+def sanitize_filename(filename):
+    filename = filename.replace('・', '_')
+    filename = filename.replace('　', '')
+    return filename
+
+try:
+    folder_path = "$PWD"
+    zip_path = "$output_dir/$OUTPUT_NAME"
+    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                arcname = os.path.join(os.path.basename(folder_path), os.path.relpath(file_path, folder_path))
+                arcname = sanitize_filename(arcname)
+                zinfo = zipfile.ZipInfo(filename=arcname.encode('cp932').decode('cp932'))
+                zinfo.compress_type = zipfile.ZIP_DEFLATED
+                with open(file_path, 'rb') as f:
+                    zf.writestr(zinfo, f.read())
+    print(f"✓ Created: ../{os.path.basename(zip_path)}")
+    sys.exit(0)
+except Exception as e:
+    print(f"✗ Error: {e}")
+    sys.exit(1)
+PYTHON_EOF
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- folder2zipエイリアス詳細モーダル -->
+        <div id="folder2zipModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📦 folder2zipエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">folder2zip フォルダ名</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">Desktop内の指定したフォルダをCP932（Windows互換）でZIP化します。Windowsユーザーへファイルを共有する際に便利です。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>ターミナルで次のコマンドを実行: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">folder2zip 圧縮したいフォルダ名</code></li>
+                            <li>例: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">folder2zip MyFolder</code></li>
+                            <li>~/Desktop/内のMyFolderが<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">MyFolder.zip</code>に圧縮されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 処理対象</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>処理場所: ~/Desktop/</li>
+                        <li>エンコーディング: CP932（Windows互換）</li>
+                        <li>出力場所: 同じDesktop内</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">folder2zip() {
+  if [ $# -eq 0 ]; then
+    echo "使用方法: folder2zip フォルダ名"
+    return 1
+  fi
+  local folder_name="$1"
+  local folder_path="$HOME/Desktop/$folder_name"
+  local zip_path="$HOME/Desktop/${folder_name}.zip"
+  if [ ! -d "$folder_path" ]; then
+    echo "✗ エラー: フォルダが見つかりません: $folder_path"
+    return 1
+  fi
+  python3 << PYTHON_EOF
+import zipfile
+import os
+import sys
+try:
+    folder_path = "$folder_path"
+    zip_path = "$zip_path"
+    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                arcname = os.path.relpath(file_path, os.path.dirname(folder_path))
+                zinfo = zipfile.ZipInfo(filename=arcname.encode('cp932').decode('cp932'))
+                zinfo.compress_type = zipfile.ZIP_DEFLATED
+                with open(file_path, 'rb') as f:
+                    zf.writestr(zinfo, f.read())
+    print(f"✓ 完了: {os.path.basename(zip_path)}")
+    sys.exit(0)
+except Exception as e:
+    print(f"✗ エラー: {e}")
+    sys.exit(1)
+PYTHON_EOF
+  return $?
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- zpcp932エイリアス詳細モーダル -->
+        <div id="dir2zipCp932Modal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📦 zpcp932エイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">zpcp932</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリ自体を1つのZIPファイルにまとめます。ZIPファイルは親ディレクトリに作成されます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>ZIP化したいディレクトリに移動（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">cd</code> コマンドで対象ディレクトリへ）</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">zpcp932</code>コマンドを実行</li>
+                            <li>カレントディレクトリと同名のZIPファイルが親ディレクトリに作成されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 処理内容</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>処理対象: カレントディレクトリ全体</li>
+                        <li>エンコーディング: CP932（Windows互換）</li>
+                        <li>出力先: 親ディレクトリ（カレントディレクトリ名.zip）</li>
+                        <li>既にZIPが存在する場合はスキップ</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">zpcp932() {
+  local dirname=$(basename "$PWD")
+  local zipname="${dirname}.zip"
+  local zip_path="$(dirname "$PWD")/$zipname"
+
+  # 既にZIPが存在する場合はスキップ
+  if [ -f "$zip_path" ]; then
+    echo "⊘ スキップ: $dirname (既にZIPが存在します: $zip_path)"
+    return 1
+  fi
+
+  echo "処理中: $dirname → $zip_path"
+
+  # ZIPフォーマットをバイナリで直接書き出す（UTF-8フラグ強制セットを回避）
+  python3 << PYTHON_EOF
+import os, sys, struct, zlib, time
+
+try:
+    folder_path = "$PWD"
+    zip_path = "$zip_path"
+    parent_path = os.path.dirname(folder_path)
+
+    entries = []
+
+    with open(zip_path, 'wb') as zf:
+        for root, dirs, files in os.walk(folder_path):
+            dirs.sort()
+            for file in sorted(files):
+                file_path = os.path.join(root, file)
+                arcname = os.path.relpath(file_path, parent_path)
+                arcname_bytes = arcname.encode('cp932')
+
+                with open(file_path, 'rb') as f:
+                    data = f.read()
+
+                compressed = zlib.compress(data, 6)[2:-4]  # deflate
+                crc = zlib.crc32(data) & 0xFFFFFFFF
+                t = time.localtime()
+                dostime = (t.tm_hour << 11) | (t.tm_min << 5) | (t.tm_sec // 2)
+                dosdate = ((t.tm_year - 1980) << 9) | (t.tm_mon << 5) | t.tm_mday
+
+                offset = zf.tell()
+
+                # Local file header
+                lh = struct.pack('<4sHHHHHIIIHH',
+                    b'PK\x03\x04',
+                    20,          # version needed
+                    0,           # flags: 0 (no UTF-8 flag)
+                    8,           # compression: deflate
+                    dostime, dosdate,
+                    crc,
+                    len(compressed),
+                    len(data),
+                    len(arcname_bytes),
+                    0            # extra field length
+                )
+                zf.write(lh)
+                zf.write(arcname_bytes)
+                zf.write(compressed)
+
+                entries.append((arcname_bytes, crc, len(compressed), len(data), dostime, dosdate, offset))
+
+        # Central directory
+        cd_offset = zf.tell()
+        for arcname_bytes, crc, comp_size, uncomp_size, dostime, dosdate, offset in entries:
+            cd = struct.pack('<4sHHHHHHIIIHHHHHII',
+                b'PK\x01\x02',
+                20,          # version made by
+                20,          # version needed
+                0,           # flags: 0
+                8,           # compression
+                dostime, dosdate,
+                crc,
+                comp_size,
+                uncomp_size,
+                len(arcname_bytes),
+                0, 0, 0, 0,  # extra, comment, disk, attr
+                0,           # external attr
+                offset
+            )
+            zf.write(cd)
+            zf.write(arcname_bytes)
+
+        # End of central directory
+        cd_size = zf.tell() - cd_offset
+        eocd = struct.pack('<4sHHHHIIH',
+            b'PK\x05\x06',
+            0, 0,
+            len(entries), len(entries),
+            cd_size, cd_offset,
+            0
+        )
+        zf.write(eocd)
+
+    sys.exit(0)
+except Exception as e:
+    print(f"✗ エラー: {e}")
+    sys.exit(1)
+PYTHON_EOF
+
+  if [ $? -eq 0 ]; then
+    echo "✓ 完了: $zip_path"
+  else
+    echo "✗ エラー: $dirname の変換に失敗しました"
+  fi
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- splitpdfエイリアス詳細モーダル -->
+        <div id="splitpdfModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📄 splitpdfエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">splitpdf</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリのPDFファイルをページごとに分割します。複数ページのPDFを1ページずつ独立したPDFファイルに分割できます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>Finderで分割したいPDFのあるフォルダを開く</li>
+                            <li>フォルダで「新規ターミナルでフォルダに移動」を選択</li>
+                            <li>開いたターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">splitpdf</code>コマンドを実行</li>
+                            <li>各ページが個別のPDFファイルになって同じフォルダに出力されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 処理内容</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>処理場所: カレントディレクトリ</li>
+                        <li>分割単位: 1ページ</li>
+                        <li>出力形式: PDF</li>
+                        <li>ファイル名: 元のファイル名 + ページ番号</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">splitpdf() {
+  for file in *.pdf; do
+    pdftk "$file" burst output "$(basename "$file" .pdf)page%04d.pdf"
+  done
+  rm -f doc_data.txt
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- pdf2webpエイリアス詳細モーダル -->
+        <div id="pdf2webpModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📄 pdf2webpエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">pdf2webp</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリのPDFファイルを300dpi解像度でWebP画像に変換します。高品質の圧縮と最高レベルの圧縮方法で、ウェブに最適化された画像を生成します。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>カレントディレクトリのPDFを配置</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">pdf2webp</code>コマンドを実行</li>
+                            <li>各PDFページがWebP画像になって同じフォルダに出力されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 変換設定</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>解像度: 300dpi (高解像度)</li>
+                        <li>品質: quality=50</li>
+                        <li>圧縮方法: method=6 (最高品質)</li>
+                        <li>出力形式: WebP</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">pdf2webp='for file in ~/editing/*.pdf; do convert -density 300 -colorspace sRGB -background white -flatten "$file" /tmp/temp.png && cwebp -resize 1200 0 -q 50 -m 6 /tmp/temp.png -o "${file%.pdf}.webp" && rm /tmp/temp.png; done'</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- pdf2pngエイリアス詳細モーダル -->
+        <div id="pdf2pngModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📄 pdf2pngエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">pdf2png</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリのPDFファイルを300dpi解像度でPNG画像に変換します。ロスレス形式で高品質を維持しながら、最大幅1200pxにリサイズして変換できます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>カレントディレクトリのPDFを配置</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">pdf2png</code>コマンドを実行</li>
+                            <li>各PDFページがPNG画像になって同じフォルダに出力されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 変換設定</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>解像度: 300dpi (高解像度)</li>
+                        <li>品質: 85%</li>
+                        <li>リサイズ: 1200x (最大幅1200px)</li>
+                        <li>出力形式: PNG (ロスレス)</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">pdf2png() {
+  for file in "$HOME/editing"/*.pdf; do
+    [ -f "$file" ] || continue
+    output="${file%.pdf}.png"
+    magick -density 300 "$file" -flatten -background white -resize 1200x "$output" && \
+    echo "✓ $(basename "$file") → $(basename "$output")" || \
+    echo "✗ $(basename "$file")"
+  done
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- gakuhuエイリアス詳細モーダル -->
+        <div id="gakuhuModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📄 gakuhuエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">gakuhu</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリの画像ファイルをPiascore用にJPEG圧縮しながら1つのPDFファイルに統合します。数値順にソートしてから処理するため、連番ファイルを正しい順序でPDF化できます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>カレントディレクトリの画像ファイルを配置</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">gakuhu</code>コマンドを実行</li>
+                            <li>「output.pdf」というPiascore用に統合されたPDFファイルが同じフォルダに出力されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 変換設定</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>解像度: 120dpi</li>
+                        <li>品質: 75% (JPEG圧縮)</li>
+                        <li>ソート: 数値順 (sort -V)</li>
+                        <li>出力形式: PDF</li>
+                        <li>出力ファイル: output.pdf</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">gakuhu() {
+  magick $(ls -1 * | sort -V) -density 120 -quality 75 -compress jpeg output.pdf
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- mvエイリアス詳細モーダル -->
+        <div id="mvModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🎬 mvエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">cd ~/editing && ls -1 *.mp4 *.m4v 2>/dev/null | awk '{print "file " $0}' > filelist.txt && ffmpeg -f concat -safe 0 -i filelist.txt -c:v copy -c:a copy output.mp4 && ffmpeg -i output.mp4 -c:v copy -c:a copy -movflags +faststart -color_range tv output_fixed.mp4 && mv output_fixed.mp4 output.mp4 && rm filelist.txt</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">1️⃣ 作業フォルダへ移動</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">cd ~/editing</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">カレントディレクトリで処理します。</p>
+                        </div>
+
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">2️⃣ ファイル検索</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">ls -1 *.mp4 *.m4v 2>/dev/null</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">カレントディレクトリのすべてのmp4とm4vファイルを取得します。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-1</code>フラグで1ファイルずつ1行に表示。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">2>/dev/null</code>はエラーメッセージを非表示にします。</p>
+                        </div>
+
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">3️⃣ ファイルリスト生成</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">awk '{print "file " $0}' > filelist.txt</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">各ファイルを1行ずつ処理し、FFmpegのconcat形式（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">file ファイル名</code>）でfilelist.txtに出力します。</p>
+                        </div>
+
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">4️⃣ MP4/M4Vファイル結合</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">ffmpeg -f concat -safe 0 -i filelist.txt -c:v copy -c:a copy output.mp4</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">FFmpegを使用してファイルリストを読み込み、すべてのmp4/m4vファイルを1つの<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">output.mp4</code>に結合します。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-c:v copy -c:a copy</code>はビデオとオーディオを再エンコードしません。</p>
+                        </div>
+
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">5️⃣ QuickTime対応メタデータ修正</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">ffmpeg -i output.mp4 -c:v copy -c:a copy -movflags +faststart -color_range tv output_fixed.mp4</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">QuickTimeが正しく色を表示するようにメタデータを再適用します。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-movflags +faststart</code>でストリーミング対応、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-color_range tv</code>でテレビ標準色範囲を設定します。</p>
+                        </div>
+
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">6️⃣ ファイル置き換え・クリーンアップ</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">mv output_fixed.mp4 output.mp4 && rm filelist.txt</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">修正されたファイルを<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">output.mp4</code>に置き換え、一時ファイル<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">filelist.txt</code>を削除します。</p>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <h3 style="color: #7c2d12;">💡 使用方法</h3>
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>カレントディレクトリのmp4ファイルを配置</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">mp4combine</code>コマンドを実行</li>
+                            <li>同じフォルダに<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">output.mp4</code>が生成されます</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-box" style="background-color: #e6fffa; border-left-color: #38b6a8;">
+                        <h3 style="color: #234e52;">⚙️ オプション説明</h3>
+                        <ul style="margin-left: 1.5rem; color: #2d3748;">
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-f concat</code>: FFmpegのconcat demuxerを使用（複数ファイルの結合用）</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-safe 0</code>: ファイルパスの安全性チェックを無視（日本語ファイル名対応）</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-i filelist.txt</code>: 結合するファイルのリストを入力</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-c:v copy -c:a copy</code>: ビデオ・オーディオを再エンコードせず品質保持</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-movflags +faststart</code>: QuickTime/ブラウザで即座に再生可能にする</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-color_range tv</code>: 色範囲をテレビ標準（制限範囲）に設定</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">2>/dev/null</code>: ファイルが見つからないエラーメッセージを非表示にする</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- mp3combineエイリアス詳細モーダル -->
+        <div id="mp3combineModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🎵 mp3combineエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">ls *.mp3 | sort | while read file; do echo "file '$file'" >> filelist.txt; done && ffmpeg -f concat -safe 0 -i filelist.txt -c copy combined.mp3 && rm filelist.txt</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">1️⃣ ファイル検索・ソート</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">ls *.mp3 | sort</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">カレントディレクトリのすべてのmp3ファイルを取得し、アルファベット順にソートします。</p>
+                        </div>
+
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">2️⃣ ファイルリスト生成</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">while read file; do echo "file '$file'" >> filelist.txt; done</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">各ファイルを1行ずつ読み込み、FFmpegのconcat形式（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">file 'ファイル名'</code>）でfilelist.txtに追記します。</p>
+                        </div>
+
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">3️⃣ MP3ファイル結合</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">ffmpeg -f concat -safe 0 -i filelist.txt -c copy combined.mp3</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">FFmpegを使用してファイルリストを読み込み、すべてのmp3ファイルを1つの<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">combined.mp3</code>に結合します。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-c copy</code>はコピーモードで、再エンコードを行いません。</p>
+                        </div>
+
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">4️⃣ 一時ファイル削除</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">rm filelist.txt</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">処理完了後、一時ファイル<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">filelist.txt</code>を削除します。</p>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <h3 style="color: #7c2d12;">💡 使用方法</h3>
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>カレントディレクトリのmp3ファイルを配置</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">mp3combine</code>コマンドを実行</li>
+                            <li>同じフォルダに<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">combined.mp3</code>が生成されます</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-box" style="background-color: #e6fffa; border-left-color: #38b6a8;">
+                        <h3 style="color: #234e52;">⚙️ オプション説明</h3>
+                        <ul style="margin-left: 1.5rem; color: #2d3748;">
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-f concat</code>: FFmpegのconcat demuxerを使用（複数ファイルの結合用）</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-safe 0</code>: ファイルパスの安全性チェックを無視（日本語ファイル名対応）</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-c copy</code>: コピーモード（再エンコードなしで高速処理）</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- pdftitエイリアス詳細モーダル -->
+        <div id="pdftitModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📄 pdftitエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">pdftit</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">フォルダ内の全PDFファイルのタイトルメタデータをファイル名に一括変更するコマンドです。PDFのメタデータを効率的に管理できます。</p>
+
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <h3 style="color: #7c2d12;">💡 使用方法</h3>
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>フォルダを右クリック → 「新規ターミナル」を選択</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">pdftit</code>コマンドを実行</li>
+                            <li>確認メッセージで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">y</code>を入力して処理実行</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-box" style="background-color: #e6fffa; border-left-color: #38b6a8;">
+                        <h3 style="color: #234e52;">⚙️ オプション説明</h3>
+                        <ul style="margin-left: 1.5rem; color: #2d3748;">
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">pdftit -r</code>: サブフォルダも含めて処理</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box" style="background-color: #f0e6ff; border-left-color: #805ad5;">
+                        <h3 style="color: #44337a;">📍 スクリプト場所</h3>
+                        <p style="color: #2d3748; margin-bottom: 0.75rem;">スクリプトは以下の場所にあります:</p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">~/bin/batch_pdf_title.py</pre>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="background-color: #fef5e7; border-left-color: #f39c12;">
+                        <h3 style="color: #6b5b0f;">🔧 エイリアス設定</h3>
+                        <p style="color: #2d3748; margin-bottom: 0.75rem;">~/.zshrc または ~/.bashrc に以下を追加:</p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">alias pdftit='python3 ~/bin/batch_pdf_title.py'</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- pdfprtエイリアス詳細モーダル -->
+        <div id="pdfprtModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📄 pdfprtエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">pdfprt</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">フォルダ内の全PDFを白黒・A4・100%の設定で一括印刷するコマンドです。複数のPDFを統一された設定で効率的に印刷できます。</p>
+
+                    <div class="info-box" style="background-color: #e6fffa; border-left-color: #38b6a8;">
+                        <h3 style="color: #234e52;">🖨️ 印刷設定</h3>
+                        <ul style="margin-left: 1.5rem; color: #2d3748;">
+                            <li><strong>色設定:</strong> 白黒 (ColorModel=Gray)</li>
+                            <li><strong>用紙サイズ:</strong> A4</li>
+                            <li><strong>スケーリング:</strong> 100% (fit-to-page)</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <h3 style="color: #7c2d12;">💡 使用方法</h3>
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>フォルダを右クリック → 「新規ターミナル」を選択</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">pdfprt</code>コマンドを実行</li>
+                            <li>確認メッセージで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">y</code>を入力して処理実行</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-box" style="background-color: #e6fffa; border-left-color: #38b6a8;">
+                        <h3 style="color: #234e52;">⚙️ オプション説明</h3>
+                        <ul style="margin-left: 1.5rem; color: #2d3748;">
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">pdfprt -r</code>: サブフォルダも含めて処理</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">pdfprt -l</code>: 利用可能なプリンタ一覧を表示</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">pdfprt -p プリンタ名</code>: 特定のプリンタを指定</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box" style="background-color: #f0e6ff; border-left-color: #805ad5;">
+                        <h3 style="color: #44337a;">📍 スクリプト場所</h3>
+                        <p style="color: #2d3748; margin-bottom: 0.75rem;">スクリプトは以下の場所にあります:</p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">~/bin/batch_pdf_print.py</pre>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="background-color: #fef5e7; border-left-color: #f39c12;">
+                        <h3 style="color: #6b5b0f;">🔧 エイリアス設定</h3>
+                        <p style="color: #2d3748; margin-bottom: 0.75rem;">~/.zshrc または ~/.bashrc に以下を追加:</p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">alias pdfprt='python3 ~/bin/batch_pdf_print.py'</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- v2pエイリアス詳細モーダル -->
+        <div id="v2pModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🎬 v2pエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">v2p</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">m4vファイルをmp4ファイルに劣化なしで変換します。m4vとmp4は同じMPEG-4コンテナフォーマットのため、再エンコードを行わずコンテナだけを変更することで、品質を損なわずに高速で変換できます。</p>
+
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <h3 style="color: #7c2d12;">💡 M4VとMP4について</h3>
+                        <ul style="margin-left: 1.5rem; color: #2d3748;">
+                            <li><strong>M4V形式:</strong> Apple製品用のMPEG-4ビデオコンテナ（DRM保護機能付きの場合もあります）</li>
+                            <li><strong>MP4形式:</strong> より汎用的なMPEG-4ビデオコンテナ</li>
+                            <li><strong>内部構造:</strong> 両者は本質的に同じコンテナフォーマット</li>
+                            <li><strong>変換方法:</strong> <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-c copy</code>オプションでコンテナだけを変更し、ビデオ・オーディオの再エンコードを行わない</li>
+                        </ul>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <p style="color: #2d3748; margin-bottom: 1rem;"><strong>フォルダを右クリック</strong>して<strong>「新規ターミナル」</strong>を選択すると、そのフォルダに移動した状態でターミナルが起動します。その後、ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">v2p</code>と入力して実行してください。</p>
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>m4vファイルがあるフォルダで右クリック</li>
+                            <li>「新規ターミナル」を選択（フォルダに移動した状態で起動）</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">v2p</code>と入力して実行</li>
+                            <li>同じフォルダにmp4ファイルが生成されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 処理内容</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>対象: カレントディレクトリ内のすべてのm4vファイル</li>
+                        <li>処理方式: 再エンコードなし（完全に劣化ゼロ）</li>
+                        <li>処理速度: 非常に高速（ファイルのコピーと同等）</li>
+                        <li>出力ファイルサイズ: 元のファイルとほぼ同じ</li>
+                        <li>出力形式: MP4（元のm4vファイルと同じ名前で.mp4拡張子）</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 基本コマンド</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">ffmpeg -i input.m4v -c copy output.mp4</pre>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 一括変換コマンド</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">for file in *.m4v; do
+  ffmpeg -i "$file" -c copy "${file%.m4v}.mp4"
+done</pre>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 エイリアス定義（zshの場合）</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">v2p() {
+  for file in *.m4v; do
+    ffmpeg -i "$file" -c copy "${file%.m4v}.mp4"
+  done
+}</pre>
+                    </div>
+
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <h3 style="color: #7c2d12;">📝 エイリアス登録方法</h3>
+                        <p style="color: #2d3748; margin-bottom: 1rem;">zshを使用している場合は、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">~/.zshrc</code>ファイルに上記のコードを追加してください。</p>
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">nano ~/.zshrc</code>を実行</li>
+                            <li>ファイルの最後に上記のコードを追加</li>
+                            <li>Ctrl+O で保存、Enter でファイル名確認、Ctrl+X で終了</li>
+                            <li>ターミナルを再起動または<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">source ~/.zshrc</code>を実行</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">✨ このコマンドの利点</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li><strong>完全に劣化なし</strong>: ビデオ・オーディオデータを一切変更していないため、品質は100%保持されます</li>
+                        <li><strong>処理速度が非常に高速</strong>: 再エンコードを行わないため、大容量ファイルでも瞬時に変換できます</li>
+                        <li><strong>ファイルサイズはほぼ同じ</strong>: コンテナ情報のみの変更のため、出力ファイルサイズは元のファイルとほぼ同じです</li>
+                        <li><strong>Macの便利機能と組み合わせ可能</strong>: 「フォルダに新規ターミナル」機能を使えば、任意のフォルダでワンコマンドで実行できます</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ オプション説明</h3>
+                    <div class="info-box" style="background-color: #e6fffa; border-left-color: #38b6a8;">
+                        <ul style="margin-left: 1.5rem; color: #2d3748;">
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-c copy</code>: ビデオストリーム・オーディオストリームを再エンコードしない（コピーのみ）</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">*.m4v</code>: ワイルドカードで複数のm4vファイルに対応</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">${file%.m4v}</code>: m4v拡張子を削除して、mp4に置き換える</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instagram動画ダウンロードモーダル -->
+        <div id="instagramDownloadModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📱 Instagram動画ダウンロードガイド</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <h3 style="color: #2d3748; margin-top: 0; margin-bottom: 1rem;">🎯 概要</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">MacのターミナルでInstagramの動画をダウンロードする方法。yt-dlpコマンドを使用して、最高品質の動画ファイルを保存できます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 セットアップ（初回のみ）</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <h4 style="color: #7c2d12; margin-bottom: 0.5rem;">1. pipx のインストール</h4>
+                        <div class="code-wrapper" style="margin-top: 0.5rem; margin-bottom: 1rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">brew install pipx</pre>
+                        </div>
+
+                        <h4 style="color: #7c2d12; margin-bottom: 0.5rem;">2. yt-dlp のインストール</h4>
+                        <div class="code-wrapper" style="margin-top: 0.5rem; margin-bottom: 1rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">pipx install yt-dlp</pre>
+                        </div>
+
+                        <h4 style="color: #7c2d12; margin-bottom: 0.5rem;">3. インストール確認</h4>
+                        <div class="code-wrapper" style="margin-top: 0.5rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">yt-dlp --version</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🎬 基本的な使用方法</h3>
+                    <div class="info-box" style="background-color: #e6fffa; border-left-color: #38b6a8;">
+                        <h4 style="color: #234e52; margin-bottom: 0.5rem;">基本コマンド</h4>
+                        <div class="code-wrapper" style="margin-top: 0.5rem; margin-bottom: 1rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">yt-dlp "URL"</pre>
+                        </div>
+
+                        <h4 style="color: #234e52; margin-bottom: 0.5rem;">例</h4>
+                        <div class="code-wrapper" style="margin-top: 0.5rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">yt-dlp "https://www.instagram.com/p/CzBVWX8pc-C/"</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ よく使うオプション</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem; color: #2d3748;">
+                        <tr style="background-color: #edf2f7;">
+                            <th style="padding: 0.5rem; text-align: left; border: 1px solid #cbd5e0;">目的</th>
+                            <th style="padding: 0.5rem; text-align: left; border: 1px solid #cbd5e0;">コマンド</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">ダウンロード場所を指定</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;"><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-o "~/Downloads/%(title)s.%(ext)s" "URL"</code></td>
+                        </tr>
+                        <tr style="background-color: #f7fafc;">
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">最高品質でダウンロード</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;"><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-f best "URL"</code></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">複数の動画をダウンロード</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;"><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">"URL1" "URL2" "URL3"</code></td>
+                        </tr>
+                    </table>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💾 よく使うコマンド例</h3>
+                    <div class="info-box" style="background-color: #fff5f7; border-left-color: #d69e2e;">
+                        <h4 style="color: #6b2c2c; margin-bottom: 0.5rem;">Downloadsフォルダに保存</h4>
+                        <div class="code-wrapper" style="margin-top: 0.5rem; margin-bottom: 1rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">yt-dlp -o "~/Downloads/%(title)s.%(ext)s" "https://www.instagram.com/p/XXXXXXXXXXXX/"</pre>
+                        </div>
+
+                        <h4 style="color: #6b2c2c; margin-bottom: 0.5rem;">最高品質でダウンロード</h4>
+                        <div class="code-wrapper" style="margin-top: 0.5rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">yt-dlp -f best "https://www.instagram.com/p/XXXXXXXXXXXX/"</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔧 トラブルシューティング</h3>
+                    <div class="info-box" style="background-color: #fed7d7; border-left-color: #c53030;">
+                        <h4 style="color: #742a2a; margin-bottom: 0.5rem;">エラー：yt-dlp: command not found</h4>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>原因</strong>: pipxがインストールされていない、またはパスが通っていない</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>解決方法</strong>: 上記のセットアップ手順を確認して、ターミナルを再起動してください。</p>
+
+                        <h4 style="color: #742a2a; margin-bottom: 0.5rem; margin-top: 1rem;">エラー：This environment is externally managed</h4>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>原因</strong>: 直接pipを使用しようとしている</p>
+                        <p style="color: #2d3748;"><strong>解決方法</strong>: pipxを使用してください（pipx install yt-dlp）</p>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚠️ 注意事項</h3>
+                    <div class="info-box" style="background-color: #feebc8; border-left-color: #c05621;">
+                        <ul style="margin-left: 1.5rem; color: #2d3748;">
+                            <li><strong>著作権</strong>: 自分がアップロードした動画のみダウンロードしてください</li>
+                            <li><strong>利用規約</strong>: 他人の著作物の無断ダウンロードは違法です。Instagramの利用規約を確認してください</li>
+                            <li><strong>プライベートアカウント</strong>: 非公開アカウントの動画にはアクセスできません</li>
+                            <li><strong>仕様変更</strong>: Instagramの仕様変更により、一時的に動作しない可能性があります</li>
+                        </ul>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📚 参考リンク</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li><a href="https://github.com/yt-dlp/yt-dlp" style="color: #4299e1; text-decoration: none;">yt-dlp GitHub</a></li>
+                        <li><a href="https://brew.sh/" style="color: #4299e1; text-decoration: none;">Homebrew</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Macターミナルショートカットモーダル -->
+        <div id="shortcutModal" class="modal" onclick="closeShortcutModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🎮 Macターミナルショートカット</h2>
+                    <button class="modal-close" onclick="closeShortcutModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- 入力制御 -->
+                    <div class="category-heading">
+                        <span class="category-icon">🎮</span>
+                        <span>入力制御</span>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+C</span></div>
+                        <div class="shortcut-description">プロセス中断</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+Z</span></div>
+                        <div class="shortcut-description">プロセス一時停止</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+D</span></div>
+                        <div class="shortcut-description">EOF（End of File）入力</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+L</span></div>
+                        <div class="shortcut-description">画面クリア（ターミナル画面をリセット）</div>
+                    </div>
+
+                    <!-- 行編集 -->
+                    <div class="category-heading">
+                        <span class="category-icon">✏️</span>
+                        <span>行編集</span>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+A</span></div>
+                        <div class="shortcut-description">行頭に移動</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+E</span></div>
+                        <div class="shortcut-description">行末に移動</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+K</span></div>
+                        <div class="shortcut-description">カーソルから行末まで削除</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+U</span></div>
+                        <div class="shortcut-description">カーソルから行頭まで削除</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+W</span></div>
+                        <div class="shortcut-description">前の単語を削除</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+R</span></div>
+                        <div class="shortcut-description">コマンド履歴検索</div>
+                    </div>
+
+                    <!-- 補完・履歴 -->
+                    <div class="category-heading">
+                        <span class="category-icon">📚</span>
+                        <span>補完・履歴</span>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Tab</span></div>
+                        <div class="shortcut-description">コマンド・パス補完</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+P</span></div>
+                        <div class="shortcut-description">前のコマンド表示</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+N</span></div>
+                        <div class="shortcut-description">次のコマンド表示</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+← / →</span></div>
+                        <div class="shortcut-description">単語単位でカーソル移動</div>
+                    </div>
+
+                    <!-- ペースト操作 -->
+                    <div class="category-heading">
+                        <span class="category-icon">📋</span>
+                        <span>ペースト操作</span>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Cmd+V</span></div>
+                        <div class="shortcut-description">クリップボードからペースト</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+Y</span></div>
+                        <div class="shortcut-description">前に削除したテキスト貼り付け</div>
+                    </div>
+
+                    <!-- プロンプト制御 -->
+                    <div class="category-heading">
+                        <span class="category-icon">🖥️</span>
+                        <span>プロンプト制御</span>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Ctrl+T</span></div>
+                        <div class="shortcut-description">前の単語と交換</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Cmd+Q</span></div>
+                        <div class="shortcut-description">ターミナル終了</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">clear</span></div>
+                        <div class="shortcut-description">画面クリア（コマンド版・スクロール履歴も削除）</div>
+                    </div>
+
+                    <!-- マルチプレックス -->
+                    <div class="category-heading">
+                        <span class="category-icon">🔀</span>
+                        <span>ウィンドウ・タブ操作</span>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Cmd+N</span></div>
+                        <div class="shortcut-description">新規ウィンドウを開く</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Cmd+T</span></div>
+                        <div class="shortcut-description">新規タブを開く</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Cmd+W</span></div>
+                        <div class="shortcut-description">ウィンドウ・タブを閉じる</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Cmd+←</span></div>
+                        <div class="shortcut-description">前のタブに切り替え</div>
+                    </div>
+
+                    <div class="shortcut-item">
+                        <div><span class="shortcut-key">Cmd+→</span></div>
+                        <div class="shortcut-description">次のタブに切り替え</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function copyToClipboard(button) {
+            const codeElement = button.nextElementSibling;
+            const text = codeElement.textContent;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'コピーしました!';
+                button.classList.add('copied');
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(() => {
+                alert('コピーに失敗しました');
+            });
+        }
+
+        // モーダル制御関数（汎用）
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+
+        function closeModal(event) {
+            // イベントオブジェクトが渡された場合（背景クリック時）
+            if (event && event.currentTarget) {
+                const modal = event.currentTarget;
+                modal.classList.remove('active');
+            } else {
+                // イベントオブジェクトがない場合（ボタン直接クリック時）は、最後にアクティブなモーダルを閉じる
+                const activeModals = document.querySelectorAll('.modal.active');
+                if (activeModals.length > 0) {
+                    activeModals[activeModals.length - 1].classList.remove('active');
+                }
+            }
+        }
+
+        // Macターミナルショートカットモーダル用
+        function openShortcutModal() {
+            const modal = document.getElementById('shortcutModal');
+            modal.classList.add('active');
+        }
+
+        function closeShortcutModal(event) {
+            const modal = document.getElementById('shortcutModal');
+            modal.classList.remove('active');
+        }
+
+        // Escキーでモーダルを閉じる
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                const activeModals = document.querySelectorAll('.modal.active');
+                activeModals.forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
