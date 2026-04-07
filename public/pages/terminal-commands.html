@@ -596,6 +596,15 @@
                 <button class="shortcut-button" onclick="openModal('instagramDownloadModal')" style="margin-top: 1rem;">📖 ガイドの詳細を見る</button>
             </div>
 
+            <div class="command-item">
+                <div class="command-title">動画から文字起こし（Whisper・一括処理）</div>
+                <div class="command-desc">文字起こししたい動画ファイル（mp4）を /Volumes/ExtStorage/作業フォルダ に入れてから実行してください。OpenAI Whisper で一括文字起こしし、結果は同フォルダに .txt ファイルとして保存されます。</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">for f in "/Volumes/ExtStorage/作業フォルダ/"*.mp4; do whisper "$f" --language ja --output_format txt --output_dir "/Volumes/ExtStorage/作業フォルダ/"; done</pre>
+                </div>
+            </div>
+
             <!-- 印刷 -->
             <div class="category-heading" id="printing">
                 <span class="category-icon">🖨️</span>
