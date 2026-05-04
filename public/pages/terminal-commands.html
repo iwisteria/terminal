@@ -420,6 +420,7 @@
                     <ul>
                         <li><a href="#software-management">ソフトウェア管理</a></li>
                         <li><a href="#image-conversion">画像変換</a></li>
+                        <li><a href="#file-operations">ファイル操作</a></li>
                         <li><a href="#video-processing">動画処理</a></li>
                         <li><a href="#printing">印刷</a></li>
                         <li><a href="#compression">圧縮・解凍</a></li>
@@ -558,6 +559,22 @@
                     <pre class="command-code">hrsz500</pre>
                 </div>
                 <button class="shortcut-button" onclick="openModal('hrsz500Modal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <!-- ファイル操作 -->
+            <div class="category-heading" id="file-operations">
+                <span class="category-icon">📁</span>
+                <span>ファイル操作</span>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">rn</div>
+                <div class="command-desc">カレントディレクトリの画像ファイルを連番でリネーム。開始番号・前後の文字列を対話形式で設定し、プレビュー確認後に実行</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">rn</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('rnModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
             <!-- 動画処理 -->
@@ -1582,6 +1599,125 @@ Resized: output/photo3.heic</pre>
                     <ul style="margin-left: 1.5rem; color: #2d3748;">
                         <li><strong>ImageMagick</strong>：<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">brew install imagemagick</code></li>
                     </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- rnエイリアス詳細モーダル -->
+        <div id="rnModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🔢 rnエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">rn</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリにある画像ファイル（jpg/jpeg/png/tiff/tif/gif/webp/bmp）を対話形式で連番リネームします。開始番号・前後に付ける文字列を指定でき、実行前にプレビューで確認できます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>リネームしたい画像があるフォルダに移動</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">rn</code>を実行</li>
+                            <li>開始番号を入力して確認</li>
+                            <li>番号の前後に文字列を追加するか選択（任意）</li>
+                            <li>プレビューを確認してリネーム実行</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 主な機能</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>対応形式：<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">jpg / jpeg / png / tiff / tif / gif / webp / bmp</code></li>
+                        <li>開始番号の入力バリデーション（数字以外はエラー）</li>
+                        <li>番号の前（prefix）または後（suffix）に任意文字列を追加可能</li>
+                        <li>リネーム前にプレビュー表示・確認プロンプト</li>
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">mv -i</code>で既存ファイルへの上書きを防止</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">rn() {
+  # 開始番号を訊く
+  while true; do
+    echo -n "開始番号を入力してください: "
+    read start
+    if [[ -z "$start" || ! "$start" =~ ^[0-9]+$ ]]; then
+      echo "エラー: 数字を入力してください。"
+      continue
+    fi
+    echo -n "開始番号は「${start}」でよいですか？ (y/n): "
+    read confirm_start
+    [[ "$confirm_start" == "y" ]] && break
+  done
+
+  # 前後に文字列を付けるか訊く
+  local prefix=""
+  local suffix=""
+  echo -n "番号の前後に文字列を追加しますか？ (y/n): "
+  read add_str
+  if [[ "$add_str" == "y" ]]; then
+    echo -n "文字列を入力してください: "
+    read str
+    echo -n "番号の「前」ですか「後」ですか？ (前/後): "
+    read pos
+    if [[ "$pos" == "前" ]]; then
+      prefix="$str"
+    else
+      suffix="$str"
+    fi
+  fi
+
+  # 対象ファイルを画像から自動検出
+  local img_files=()
+  for f in *(N-.); do
+    [[ "$f" =~ \.(jpg|jpeg|png|tiff|tif|gif|webp|bmp)$ ]] && img_files+=("$f")
+  done
+
+  if [[ ${#img_files[@]} -eq 0 ]]; then
+    echo "対象の画像ファイルが見つかりません。" >&2
+    return 1
+  fi
+
+  # プレビュー表示
+  echo ""
+  echo "【プレビュー】"
+  local n=$start
+  for f in "${img_files[@]}"; do
+    local ext="${f##*.}"
+    local new_name="${prefix}${n}${suffix}.${ext}"
+    echo "$f → $new_name"
+    (( n++ ))
+  done
+
+  # 確認
+  echo ""
+  echo -n "このままリネームしますか？ (y/n): "
+  read confirm
+  if [[ "$confirm" != "y" ]]; then
+    echo "キャンセルしました。"
+    return 0
+  fi
+
+  # 実行
+  n=$start
+  for f in "${img_files[@]}"; do
+    local ext="${f##*.}"
+    local new_name="${prefix}${n}${suffix}.${ext}"
+    mv -i -- "$f" "$new_name"
+    (( n++ ))
+  done
+  echo "リネーム完了しました。"
+}</pre>
+                    </div>
                 </div>
             </div>
         </div>
