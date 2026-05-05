@@ -410,7 +410,7 @@
         <div class="header">
             <h1>ターミナルコマンド集</h1>
             <p>よく使うコマンドとエイリアスのリファレンス</p>
-            <div class="last-update">更新: 2026-03-28 11:00</div>
+            <div class="last-update">更新: 2026-05-05 10:00</div>
         </div>
 
         <div class="toc">
@@ -426,6 +426,7 @@
                         <li><a href="#compression">圧縮・解凍</a></li>
                         <li><a href="#pdf-processing">PDF処理</a></li>
                         <li><a href="#audio-processing">音声処理</a></li>
+                        <li><a href="#sheet-music">楽譜</a></li>
                     </ul>
                 </li>
             </ul>
@@ -746,17 +747,6 @@
             </div>
 
             <div class="command-item">
-                <div class="command-title">gakuhu</div>
-                <div class="command-desc">カレントディレクトリの画像ファイルをPiascore用にJPEG圧縮してPDFに変換（解像度120dpi、品質75%）</div>
-                <div class="code-wrapper">
-                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">gakuhu</pre>
-                </div>
-                <div class="alias-tag">使用方法: カレントディレクトリの画像ファイルを自動的にPiascore用PDFに変換</div>
-                <button class="shortcut-button" onclick="openModal('gakuhuModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
-            </div>
-
-            <div class="command-item">
                 <div class="command-title">pdftit</div>
                 <div class="command-desc">フォルダ内の全PDFファイルのタイトルメタデータをファイル名に一括変更</div>
                 <div class="code-wrapper">
@@ -774,6 +764,43 @@
                     <pre class="command-code">pdfprt</pre>
                 </div>
                 <button class="shortcut-button" onclick="openModal('pdfprtModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <!-- 楽譜 -->
+            <div class="category-heading" id="sheet-music">
+                <span class="category-icon">🎼</span>
+                <span>楽譜</span>
+            </div>
+
+            <div class="info-box" style="margin-top: 1.5rem; background-color: #fffaf0; border-left-color: #ed8936;">
+                <h3 style="color: #7c2d12;">🖨️ 複合機スキャン設定</h3>
+                <ul style="margin-left: 1.5rem; color: #2d3748;">
+                    <li>種類: <strong>JPEG</strong></li>
+                    <li>解像度: <strong>300dpi</strong></li>
+                    <li>白黒ページ: <strong>グレースケール</strong></li>
+                </ul>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">tw</div>
+                <div class="command-desc">複合機でスキャンしたJPEGをトレヴァー・ワイ楽譜用にA4サイズへ整形しPiascore用PDFに変換</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">tw</pre>
+                </div>
+                <div class="alias-tag">使い方: スキャンしたJPEGが入ったフォルダで「tw」と入力</div>
+                <button class="shortcut-button" onclick="openModal('twModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">gakuhu</div>
+                <div class="command-desc">カレントディレクトリの画像ファイルをPiascore用にJPEG圧縮してPDFに変換（解像度120dpi、品質75%）</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">gakuhu</pre>
+                </div>
+                <div class="alias-tag">使用方法: カレントディレクトリの画像ファイルを自動的にPiascore用PDFに変換</div>
+                <button class="shortcut-button" onclick="openModal('gakuhuModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
             <!-- 音声処理 -->
@@ -2853,6 +2880,92 @@ done</pre>
                         <li><a href="https://github.com/yt-dlp/yt-dlp" style="color: #4299e1; text-decoration: none;">yt-dlp GitHub</a></li>
                         <li><a href="https://brew.sh/" style="color: #4299e1; text-decoration: none;">Homebrew</a></li>
                     </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- twエイリアス詳細モーダル -->
+        <div id="twModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🎼 twエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">tw</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">複合機でスキャンしたトレヴァー・ワイのJPEGを1枚ずつA4サイズ（2050x2980px）に整形し、Piascoreで読みやすいPDFに変換します。中間ファイル（out_*.jpg）を生成してから最終PDFを作成します。</p>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">1️⃣ JPEGファイルをループ処理</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">for f in *.jpg *.jpeg(N); do ... done</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">カレントディレクトリの <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">.jpg</code> / <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">.jpeg</code> を1枚ずつ処理します。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">(N)</code> はファイルが存在しない場合エラーを出さないzshのグロブ修飾子です。</p>
+                        </div>
+
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">2️⃣ リサイズ</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">-resize 90%</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">スキャン画像を90%に縮小して余白スペースを確保します。</p>
+                        </div>
+
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">3️⃣ コントラスト調整</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">-level 20%,95%</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">黒点を20%、白点を95%に設定。スキャン時の薄いグレー背景を飛ばして、楽譜の文字を見やすくします。</p>
+                        </div>
+
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">4️⃣ A4キャンバスにセンタリング</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">-gravity center -extent 2050x2980</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">2050x2980px（A4縦相当）の白いキャンバスに画像をセンタリングして配置します。全ページのサイズを統一します。</p>
+                        </div>
+
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">5️⃣ 中間ファイル出力</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">out_${f%.*}.jpg</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">整形済み画像を <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">out_元ファイル名.jpg</code> として保存します（例: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">out_001.jpg</code>）。</p>
+                        </div>
+
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">6️⃣ PDF化</div>
+                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">magick out_*.jpg -compress JPEG -quality 30 output.pdf</pre>
+                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">中間ファイルをまとめてPDF化。JPEG圧縮・品質30でPiascoreに最適なファイルサイズに仕上げます。</p>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>複合機でスキャンしたJPEGファイルを同じフォルダに用意</li>
+                            <li>ターミナルでそのフォルダに移動して <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">tw</code> を実行</li>
+                            <li>中間ファイル（out_*.jpg）と <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">output.pdf</code> が生成される</li>
+                            <li>output.pdfをPiascoreにインポート</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 変換設定</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>リサイズ: 90%</li>
+                        <li>レベル補正: 黒点20% / 白点95%</li>
+                        <li>出力サイズ: 2050×2980px（A4縦）</li>
+                        <li>PDF圧縮: JPEG 品質30</li>
+                        <li>出力ファイル: output.pdf</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">alias tw='for f in *.jpg *.jpeg(N); do magick "$f" -resize 90% -level 20%,95% -gravity center -extent 2050x2980 "out_${f%.*}.jpg"; done && magick out_*.jpg -compress JPEG -quality 30 output.pdf'</pre>
+                    </div>
                 </div>
             </div>
         </div>
