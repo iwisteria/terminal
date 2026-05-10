@@ -562,6 +562,16 @@
                 <button class="shortcut-button" onclick="openModal('hrsz500Modal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
+            <div class="command-item">
+                <div class="command-title">avif</div>
+                <div class="command-desc">カレントディレクトリ以下の画像（HEIC/HEIF/JPG/JPEG/PNG/TIFF/BMP/GIF）をAVIF形式に一括変換。元ファイルと一時ファイルは変換成功後に削除</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">avif</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('avifModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
             <!-- ファイル操作 -->
             <div class="category-heading" id="file-operations">
                 <span class="category-icon">📁</span>
@@ -1220,6 +1230,60 @@
                     <div class="code-wrapper" style="margin-top: 0.75rem;">
                         <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                         <pre class="command-code">img2webp='for f in ~/editing/*.{png,jpeg,jpg}; do [ -f "$f" ] && cwebp -resize 180 180 -m 6 -q 50 "$f" -o "${f%.*}.webp" && echo "✓ $(basename "$f")" || echo "✗ $(basename "$f")"; done'</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- avifエイリアス詳細モーダル -->
+        <div id="avifModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ avifエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">avif</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリ以下を再帰的に検索し、HEIC/HEIF/JPG/JPEG/PNG/TIFF/TIF/BMP/GIF 形式の画像を AVIF 形式に一括変換します。sips で一時 PNG に変換後、avifenc で品質60の AVIF を生成。変換成功後は元ファイルと一時 PNG を削除します。既に同名の .avif が存在する場合はスキップします。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>変換したい画像が含まれるフォルダへ移動</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">avif</code>を実行</li>
+                            <li>サブフォルダを含む全画像が AVIF 形式に変換されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 変換設定</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>入力形式: HEIC, HEIF, JPG, JPEG, PNG, TIFF, TIF, BMP, GIF</li>
+                        <li>出力形式: AVIF（品質60）</li>
+                        <li>既存の .avif はスキップ</li>
+                        <li>変換成功後に元ファイル・一時 PNG を自動削除</li>
+                        <li>必要ツール: sips（macOS 標準）、avifenc（要インストール）</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">find . -iname "*.heic" -o -iname "*.heif" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.tiff" -o -iname "*.tif" -o -iname "*.bmp" -o -iname "*.gif" | while read f; do
+  tmp="${f%.*}_tmp.png"
+  out="${f%.*}.avif"
+  [[ -f "$out" ]] && continue
+  sips -s format png "$f" --out "$tmp" && \
+  avifenc -q 60 "$tmp" "$out" && \
+  rm "$tmp" "$f"
+done</pre>
                     </div>
                 </div>
             </div>
