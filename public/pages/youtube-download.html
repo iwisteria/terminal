@@ -237,8 +237,8 @@
         <div class="toc">
             <h3>📑 目次</h3>
             <ul>
-                <li><a href="#video-download-h264">動画ダウンロード（H.264）</a></li>
                 <li><a href="#video-download-av1">動画ダウンロード（AV1優先）</a></li>
+                <li><a href="#video-download-h264">動画ダウンロード（H.264）</a></li>
                 <li><a href="#audio-extract">音声抽出</a></li>
                 <li><a href="#advanced">詳細・応用機能</a></li>
             </ul>
@@ -247,59 +247,6 @@
         <div class="info-box">
             <h3>📌 使い方</h3>
             <p>以下のコマンドはターミナルで実行してください。コマンドの右上の「コピー」ボタンをクリックするとクリップボードにコピーできます。<br><code>URL</code> を実際の YouTube URL に置き換えて実行してください。</p>
-        </div>
-
-        <!-- 動画ダウンロード（H.264） -->
-        <div class="section" id="video-download-h264">
-            <h2>動画ダウンロード（H.264）</h2>
-
-            <!-- HD1080p -->
-            <div class="category-heading">
-                <span class="category-icon">📺</span>
-                <span>HD1080p でダウンロード</span>
-            </div>
-
-            <div class="command-item">
-                <div class="command-title">HD1080p（クッキーなし - 公開動画向け）</div>
-                <div class="command-desc">1080p（フルHD）の品質でダウンロード。H.264（mp4形式）で安定ダウンロード。</div>
-                <div class="code-wrapper">
-                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=h264][height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
-                </div>
-            </div>
-
-            <div class="command-item">
-                <div class="command-title">HD1080p（Brave認証付き - 制限付き動画向け）</div>
-                <div class="command-desc">1080p（フルHD）の品質でダウンロード。Braveブラウザのクッキーで認証対応。H.264（mp4形式）で安定ダウンロード。</div>
-                <div class="code-wrapper">
-                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp --cookies-from-browser brave -f "bestvideo[vcodec^=h264][height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
-                </div>
-            </div>
-
-            <!-- SD720p -->
-            <div class="category-heading">
-                <span class="category-icon">📱</span>
-                <span>SD720p でダウンロード</span>
-            </div>
-
-            <div class="command-item">
-                <div class="command-title">SD720p（クッキーなし - 公開動画向け）</div>
-                <div class="command-desc">720p（HD）の品質でダウンロード。H.264（mp4形式）でストレージ節約に最適。</div>
-                <div class="code-wrapper">
-                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=h264][height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
-                </div>
-            </div>
-
-            <div class="command-item">
-                <div class="command-title">SD720p（Brave認証付き - 制限付き動画向け）</div>
-                <div class="command-desc">720p（HD）の品質でダウンロード。Braveブラウザのクッキーで認証対応。H.264（mp4形式）で確実ダウンロード。</div>
-                <div class="code-wrapper">
-                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp --cookies-from-browser brave -f "bestvideo[vcodec^=h264][height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
-                </div>
-            </div>
         </div>
 
         <!-- 動画ダウンロード（AV1優先） -->
@@ -375,6 +322,59 @@
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                     <pre class="command-code">yt-dlp --remote-components ejs:github --cookies-from-browser brave -f "bestvideo[vcodec^=av01][height<=720][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=h264][height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 動画ダウンロード（H.264） -->
+        <div class="section" id="video-download-h264">
+            <h2>動画ダウンロード（H.264）</h2>
+
+            <!-- HD1080p -->
+            <div class="category-heading">
+                <span class="category-icon">📺</span>
+                <span>HD1080p でダウンロード</span>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">HD1080p（クッキーなし - 公開動画向け）</div>
+                <div class="command-desc">1080p（フルHD）の品質でダウンロード。H.264（mp4形式）で安定ダウンロード。</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=h264][height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                </div>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">HD1080p（Brave認証付き - 制限付き動画向け）</div>
+                <div class="command-desc">1080p（フルHD）の品質でダウンロード。Braveブラウザのクッキーで認証対応。H.264（mp4形式）で安定ダウンロード。</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">yt-dlp --cookies-from-browser brave -f "bestvideo[vcodec^=h264][height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                </div>
+            </div>
+
+            <!-- SD720p -->
+            <div class="category-heading">
+                <span class="category-icon">📱</span>
+                <span>SD720p でダウンロード</span>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">SD720p（クッキーなし - 公開動画向け）</div>
+                <div class="command-desc">720p（HD）の品質でダウンロード。H.264（mp4形式）でストレージ節約に最適。</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=h264][height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                </div>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">SD720p（Brave認証付き - 制限付き動画向け）</div>
+                <div class="command-desc">720p（HD）の品質でダウンロード。Braveブラウザのクッキーで認証対応。H.264（mp4形式）で確実ダウンロード。</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">yt-dlp --cookies-from-browser brave -f "bestvideo[vcodec^=h264][height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
                 </div>
             </div>
         </div>
