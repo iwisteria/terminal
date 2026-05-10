@@ -676,33 +676,11 @@
             </div>
 
             <div class="command-item">
-                <div class="command-title">zp (zipthis_cp932)</div>
-                <div class="command-desc">カレントディレクトリをCP932（Windows互換）でZIP化。Windowsで日本語ファイル名が文字化けしないZIPファイルを作成します</div>
-                <div class="code-wrapper">
-                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">zp</pre>
-                </div>
-                <div class="alias-tag">使い方: 圧縮したいフォルダで右クリック → 「フォルダに新規ターミナル」を選択して「zp」と入力</div>
-                <button class="shortcut-button" onclick="openModal('zpModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
-            </div>
-
-            <div class="command-item">
-                <div class="command-title">folder2zip</div>
-                <div class="command-desc">Desktop内の指定フォルダをCP932（Windows互換）でZIP化します</div>
-                <div class="code-wrapper">
-                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">folder2zip フォルダ名</pre>
-                </div>
-                <div class="alias-tag">使用方法: ~/Desktop/ 内のフォルダを指定して CP932 でZIP化</div>
-                <button class="shortcut-button" onclick="openModal('folder2zipModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
-            </div>
-
-            <div class="command-item">
-                <div class="command-title">zpcp932</div>
+                <div class="command-title">zp</div>
                 <div class="command-desc">カレントディレクトリ自体をCP932（Windows互換）でZIP化します</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">zpcp932</pre>
+                    <pre class="command-code">zp</pre>
                 </div>
                 <div class="alias-tag">使用方法: カレントディレクトリ自体を CP932 でZIP化（ZIPは親ディレクトリに作成）</div>
                 <button class="shortcut-button" onclick="openModal('dir2zipCp932Modal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
@@ -1956,7 +1934,7 @@ Resized: output/photo3.heic</pre>
         </div>
 
         <!-- zpエイリアス詳細モーダル -->
-        <div id="zpModal" class="modal" onclick="closeModal(event)">
+        <div id="dir2zipCp932Modal" class="modal" onclick="closeModal(event)">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <div class="modal-header">
                     <h2>📦 zpエイリアスの詳細</h2>
@@ -1973,173 +1951,13 @@ Resized: output/photo3.heic</pre>
                     </div>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
-                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリをCP932（Windows互換）エンコーディングでZIP化します。Windowsで日本語ファイル名が文字化けしないZIPファイルを作成するために最適です。</p>
-
-                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
-                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
-                        <ol style="margin-left: 1.5rem; color: #2d3748;">
-                            <li>圧縮したいフォルダで右クリック</li>
-                            <li>「フォルダに新規ターミナル」を選択</li>
-                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">zp</code>と入力</li>
-                            <li>カレントディレクトリが1つのZIPファイルに圧縮されます</li>
-                        </ol>
-                    </div>
-
-                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 特徴</h3>
-                    <ul style="margin-left: 1.5rem; color: #2d3748;">
-                        <li>エンコーディング: CP932（Windows互換）</li>
-                        <li>日本語ファイル名: 文字化けしない</li>
-                        <li>日本語フォルダ名: 対応</li>
-                        <li>特殊文字対応: ㈱、①②③など</li>
-                    </ul>
-
-                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
-                    <div class="code-wrapper" style="margin-top: 0.75rem;">
-                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                        <pre class="command-code">zipthis_cp932() {
-  local FOLDER_NAME=$(basename "$PWD")
-  local OUTPUT_NAME="${1:-$FOLDER_NAME.zip}"
-  local output_dir=$(dirname "$PWD")
-  python3 << PYTHON_EOF
-import zipfile
-import os
-import sys
-
-def sanitize_filename(filename):
-    filename = filename.replace('・', '_')
-    filename = filename.replace('　', '')
-    return filename
-
-try:
-    folder_path = "$PWD"
-    zip_path = "$output_dir/$OUTPUT_NAME"
-    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
-        for root, dirs, files in os.walk(folder_path):
-            for file in files:
-                file_path = os.path.join(root, file)
-                arcname = os.path.join(os.path.basename(folder_path), os.path.relpath(file_path, folder_path))
-                arcname = sanitize_filename(arcname)
-                zinfo = zipfile.ZipInfo(filename=arcname.encode('cp932').decode('cp932'))
-                zinfo.compress_type = zipfile.ZIP_DEFLATED
-                with open(file_path, 'rb') as f:
-                    zf.writestr(zinfo, f.read())
-    print(f"✓ Created: ../{os.path.basename(zip_path)}")
-    sys.exit(0)
-except Exception as e:
-    print(f"✗ Error: {e}")
-    sys.exit(1)
-PYTHON_EOF
-}</pre>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- folder2zipエイリアス詳細モーダル -->
-        <div id="folder2zipModal" class="modal" onclick="closeModal(event)">
-            <div class="modal-content" onclick="event.stopPropagation()">
-                <div class="modal-header">
-                    <h2>📦 folder2zipエイリアスの詳細</h2>
-                    <button class="modal-close" onclick="closeModal()">&times;</button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="info-box">
-                        <h3>エイリアスコマンド</h3>
-                        <div class="code-wrapper" style="margin-top: 0.75rem;">
-                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">folder2zip フォルダ名</pre>
-                        </div>
-                    </div>
-
-                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
-                    <p style="color: #718096; margin-bottom: 1rem;">Desktop内の指定したフォルダをCP932（Windows互換）でZIP化します。Windowsユーザーへファイルを共有する際に便利です。</p>
-
-                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
-                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
-                        <ol style="margin-left: 1.5rem; color: #2d3748;">
-                            <li>ターミナルで次のコマンドを実行: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">folder2zip 圧縮したいフォルダ名</code></li>
-                            <li>例: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">folder2zip MyFolder</code></li>
-                            <li>~/Desktop/内のMyFolderが<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">MyFolder.zip</code>に圧縮されます</li>
-                        </ol>
-                    </div>
-
-                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 処理対象</h3>
-                    <ul style="margin-left: 1.5rem; color: #2d3748;">
-                        <li>処理場所: ~/Desktop/</li>
-                        <li>エンコーディング: CP932（Windows互換）</li>
-                        <li>出力場所: 同じDesktop内</li>
-                    </ul>
-
-                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
-                    <div class="code-wrapper" style="margin-top: 0.75rem;">
-                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                        <pre class="command-code">folder2zip() {
-  if [ $# -eq 0 ]; then
-    echo "使用方法: folder2zip フォルダ名"
-    return 1
-  fi
-  local folder_name="$1"
-  local folder_path="$HOME/Desktop/$folder_name"
-  local zip_path="$HOME/Desktop/${folder_name}.zip"
-  if [ ! -d "$folder_path" ]; then
-    echo "✗ エラー: フォルダが見つかりません: $folder_path"
-    return 1
-  fi
-  python3 << PYTHON_EOF
-import zipfile
-import os
-import sys
-try:
-    folder_path = "$folder_path"
-    zip_path = "$zip_path"
-    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
-        for root, dirs, files in os.walk(folder_path):
-            for file in files:
-                file_path = os.path.join(root, file)
-                arcname = os.path.relpath(file_path, os.path.dirname(folder_path))
-                zinfo = zipfile.ZipInfo(filename=arcname.encode('cp932').decode('cp932'))
-                zinfo.compress_type = zipfile.ZIP_DEFLATED
-                with open(file_path, 'rb') as f:
-                    zf.writestr(zinfo, f.read())
-    print(f"✓ 完了: {os.path.basename(zip_path)}")
-    sys.exit(0)
-except Exception as e:
-    print(f"✗ エラー: {e}")
-    sys.exit(1)
-PYTHON_EOF
-  return $?
-}</pre>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- zpcp932エイリアス詳細モーダル -->
-        <div id="dir2zipCp932Modal" class="modal" onclick="closeModal(event)">
-            <div class="modal-content" onclick="event.stopPropagation()">
-                <div class="modal-header">
-                    <h2>📦 zpcp932エイリアスの詳細</h2>
-                    <button class="modal-close" onclick="closeModal()">&times;</button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="info-box">
-                        <h3>エイリアスコマンド</h3>
-                        <div class="code-wrapper" style="margin-top: 0.75rem;">
-                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">zpcp932</pre>
-                        </div>
-                    </div>
-
-                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
                     <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリ自体を1つのZIPファイルにまとめます。ZIPファイルは親ディレクトリに作成されます。</p>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
                     <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
                         <ol style="margin-left: 1.5rem; color: #2d3748;">
                             <li>ZIP化したいディレクトリに移動（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">cd</code> コマンドで対象ディレクトリへ）</li>
-                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">zpcp932</code>コマンドを実行</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">zp</code>コマンドを実行</li>
                             <li>カレントディレクトリと同名のZIPファイルが親ディレクトリに作成されます</li>
                         </ol>
                     </div>
@@ -2155,7 +1973,7 @@ PYTHON_EOF
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
                     <div class="code-wrapper" style="margin-top: 0.75rem;">
                         <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                        <pre class="command-code">zpcp932() {
+                        <pre class="command-code">zp() {
   local dirname=$(basename "$PWD")
   local zipname="${dirname}.zip"
   local zip_path="$(dirname "$PWD")/$zipname"
