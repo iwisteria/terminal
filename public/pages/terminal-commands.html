@@ -572,6 +572,16 @@
                 <button class="shortcut-button" onclick="openModal('avifModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
+            <div class="command-item">
+                <div class="command-title">png</div>
+                <div class="command-desc">カレントディレクトリのavif/jpg/jpeg/webp画像をPNG形式に一括変換（ImageMagick使用）</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">png</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('pngModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
             <!-- ファイル操作 -->
             <div class="category-heading" id="file-operations">
                 <span class="category-icon">📁</span>
@@ -1262,6 +1272,56 @@
   avifenc -q 60 "$tmp" "$out" && \
   rm "$tmp" "$f"
 done</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- pngエイリアス詳細モーダル -->
+        <div id="pngModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ pngエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">png</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリの .avif / .jpg / .jpeg / .webp ファイルを PNG 形式に一括変換します。ImageMagick（magick）を使用して各ファイルを同名の .png に変換します。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>変換したい画像が含まれるフォルダへ移動</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">png</code>を実行</li>
+                            <li>カレントディレクトリの対象画像が PNG に変換されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 変換設定</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>入力形式: AVIF, JPG, JPEG, WEBP</li>
+                        <li>出力形式: PNG（同名ファイル、拡張子のみ変更）</li>
+                        <li>対象: カレントディレクトリのみ（サブフォルダは含まない）</li>
+                        <li>必要ツール: ImageMagick（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">brew install imagemagick</code>）</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 エイリアスの設定（初回のみ）</h3>
+                    <div class="info-box" style="background-color: #fef5e7; border-left-color: #f39c12;">
+                        <h3 style="color: #6b5b0f;">🔧 ~/.zshrc への追加</h3>
+                        <p style="color: #2d3748; margin-bottom: 0.75rem;">以下のコマンドを実行するとエイリアスが登録されます:</p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">echo "alias png='setopt nullglob; for f in *.avif *.jpg *.jpeg *.webp; do magick \"$f\" \"${f%.*}.png\"; done; unsetopt nullglob'" >> ~/.zshrc && source ~/.zshrc</pre>
+                        </div>
                     </div>
                 </div>
             </div>
