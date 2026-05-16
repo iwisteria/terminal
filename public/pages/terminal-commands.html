@@ -1320,7 +1320,7 @@ done</pre>
                         <p style="color: #2d3748; margin-bottom: 0.75rem;">以下のコマンドを実行するとエイリアスが登録されます:</p>
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">echo "alias png='setopt nullglob; for f in *.avif *.jpg *.jpeg *.webp; do magick \"$f\" \"${f%.*}.png\"; done; unsetopt nullglob'" >> ~/.zshrc && source ~/.zshrc</pre>
+                            <pre class="command-code">echo 'alias png='"'"'setopt nullglob; for f in *.avif *.jpg *.jpeg *.webp; do magick "$f" "${f%.*}.png"; done; unsetopt nullglob'"'"'' >> ~/.zshrc && source ~/.zshrc</pre>
                         </div>
                     </div>
                 </div>
