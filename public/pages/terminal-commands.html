@@ -574,7 +574,7 @@
 
             <div class="command-item">
                 <div class="command-title">png</div>
-                <div class="command-desc">カレントディレクトリのavif/jpg/jpeg/webp画像をPNG形式に一括変換（ImageMagick使用）</div>
+                <div class="command-desc">カレントディレクトリのavif/heic/jpg/jpeg/webp画像をPNG形式に一括変換（ImageMagick使用）</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                     <pre class="command-code">png</pre>
@@ -1295,7 +1295,7 @@ done</pre>
                     </div>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
-                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリの .avif / .jpg / .jpeg / .webp ファイルを PNG 形式に一括変換します。ImageMagick（magick）を使用して各ファイルを同名の .png に変換します。</p>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリの .avif / .heic / .jpg / .jpeg / .webp ファイルを PNG 形式に一括変換します。ImageMagick（magick）を使用して各ファイルを同名の .png に変換します。</p>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
                     <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
@@ -1308,7 +1308,7 @@ done</pre>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 変換設定</h3>
                     <ul style="margin-left: 1.5rem; color: #2d3748;">
-                        <li>入力形式: AVIF, JPG, JPEG, WEBP</li>
+                        <li>入力形式: AVIF, HEIC, JPG, JPEG, WEBP</li>
                         <li>出力形式: PNG（同名ファイル、拡張子のみ変更）</li>
                         <li>対象: カレントディレクトリのみ（サブフォルダは含まない）</li>
                         <li>必要ツール: ImageMagick（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">brew install imagemagick</code>）</li>
@@ -1320,7 +1320,7 @@ done</pre>
                         <p style="color: #2d3748; margin-bottom: 0.75rem;">以下のコマンドを実行するとエイリアスが登録されます:</p>
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">echo 'alias png='"'"'setopt nullglob; for f in *.avif *.jpg *.jpeg *.webp; do magick "$f" "${f%.*}.png"; done; unsetopt nullglob'"'"'' >> ~/.zshrc && source ~/.zshrc</pre>
+                            <pre class="command-code">echo 'alias png='"'"'setopt nullglob; for f in *.avif *.heic *.jpg *.jpeg *.webp; do magick "$f" "${f%.*}.png"; done; unsetopt nullglob'"'"'' >> ~/.zshrc && source ~/.zshrc</pre>
                         </div>
                     </div>
                 </div>
