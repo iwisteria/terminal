@@ -583,6 +583,16 @@
             </div>
 
             <div class="command-item">
+                <div class="command-title">heic</div>
+                <div class="command-desc">カレントディレクトリのjpg/jpeg/png/webp画像をHEIC形式に一括変換（heif-enc使用）</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">heic</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('heicModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item">
                 <div class="command-title">trim95</div>
                 <div class="command-desc">カレントディレクトリのHEIC画像を中央から95%にクロップし、trimmed_プレフィックスで保存（sips使用）</div>
                 <div class="code-wrapper">
@@ -1331,6 +1341,56 @@ done</pre>
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                             <pre class="command-code">echo 'alias png='"'"'setopt nullglob; for f in *.avif *.heic *.jpg *.jpeg *.webp; do magick "$f" "${f%.*}.png"; done; unsetopt nullglob'"'"'' >> ~/.zshrc && source ~/.zshrc</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- heicエイリアス詳細モーダル -->
+        <div id="heicModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ heicエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">heic</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリの .jpg / .jpeg / .png / .webp ファイルを HEIC 形式に一括変換します。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">heif-enc</code> を使用して各ファイルを同名の .heic に変換します。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>変換したい画像が含まれるフォルダへ移動</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">heic</code>を実行</li>
+                            <li>カレントディレクトリの対象画像が HEIC に変換されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 変換設定</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>入力形式: JPG, JPEG, PNG, WEBP</li>
+                        <li>出力形式: HEIC（同名ファイル、拡張子のみ変更）</li>
+                        <li>対象: カレントディレクトリのみ（サブフォルダは含まない）</li>
+                        <li>必要ツール: libheif（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">brew install libheif</code>）</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 エイリアスの設定（初回のみ）</h3>
+                    <div class="info-box" style="background-color: #fef5e7; border-left-color: #f39c12;">
+                        <h3 style="color: #6b5b0f;">🔧 ~/.zshrc への追加</h3>
+                        <p style="color: #2d3748; margin-bottom: 0.75rem;">以下のコマンドを実行するとエイリアスが登録されます:</p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">echo 'alias heic='"'"'setopt NULL_GLOB; for f in *.jpg *.jpeg *.png *.webp; do heif-enc "$f" -o "${f%.*}.heic"; done; unsetopt NULL_GLOB'"'"'' >> ~/.zshrc && source ~/.zshrc</pre>
                         </div>
                     </div>
                 </div>
