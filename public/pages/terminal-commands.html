@@ -783,6 +783,15 @@
                 </div>
                 <button class="shortcut-button" onclick="openModal('pdfprtModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
+            <div class="command-item">
+                <div class="command-title">p2h</div>
+                <div class="command-desc">カレントディレクトリのPDFをHEICに変換し、A4縦アスペクト比で中央95%トリム</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">p2h</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('p2hModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
 
             <!-- 楽譜 -->
             <div class="category-heading" id="sheet-music">
@@ -2745,6 +2754,88 @@ PYTHON_EOF
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                             <pre class="command-code">alias pdfprt='python3 ~/bin/batch_pdf_print.py'</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- p2h関数詳細モーダル -->
+        <div id="p2hModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📄 p2h関数の詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>コマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">p2h</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリの .pdf ファイルをページごとにHEICへ変換し、A4縦アスペクト比（210:297）で中央基準95%にトリムします。中間ファイルは自動的に削除されます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>変換したいPDFが含まれるフォルダへ移動</li>
+                            <li>ターミナルで <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">p2h</code> を実行</li>
+                            <li>各ページが <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">ファイル名_0000.heic</code> 等の形式で出力されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 処理内容</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>入力形式: PDF（複数ページ対応）</li>
+                        <li>出力形式: HEIC</li>
+                        <li>解像度: 300dpi</li>
+                        <li>アスペクト比: A4縦（210:297）</li>
+                        <li>トリム: 中央基準95%</li>
+                        <li>出力ファイル名: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">元ファイル名_0000.heic</code>（ページ番号付き）</li>
+                        <li>必要ツール: ImageMagick（magick）、heif-enc、sips、bc</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 関数の設定（初回のみ）</h3>
+                    <div class="info-box" style="background-color: #fef5e7; border-left-color: #f39c12;">
+                        <h3 style="color: #6b5b0f;">🔧 ~/.zshrc への追加</h3>
+                        <p style="color: #2d3748; margin-bottom: 0.75rem;">以下のコマンドを実行すると関数が登録されます:</p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">cat >> ~/.zshrc << 'EOF'
+p2h() {
+  for pdf in *.pdf; do
+    [ -f "$pdf" ] || continue
+    base="${pdf%.*}"
+    magick -density 300 "$pdf" -quality 100 "__p2h_${base}_%04d.png"
+    for png in "__p2h_${base}"_*.png; do
+      [ -f "$png" ] || continue
+      stem="${png#__p2h_}"; stem="${stem%.png}"
+      tmp_heic="__p2h_${stem}.heic"
+      out_heic="${stem}.heic"
+      heif-enc "$png" -o "$tmp_heic" && rm "$png"
+      read w h < &lt;(sips -g pixelWidth -g pixelHeight "$tmp_heic" | awk '/pixelWidth/{w=$2} /pixelHeight/{h=$2} END{print w, h}')
+      max_w=$(( w * 95 / 100 ))
+      max_h=$(( h * 95 / 100 ))
+      if (( max_w * 297 >= max_h * 210 )); then
+        crop_h=$max_h
+        crop_w=$(echo "scale=0; $max_h * 210 / 297" | bc)
+      else
+        crop_w=$max_w
+        crop_h=$(echo "scale=0; $max_w * 297 / 210" | bc)
+      fi
+      offset_x=$(( (w - crop_w) / 2 ))
+      offset_y=$(( (h - crop_h) / 2 ))
+      sips --cropToHeightWidth $crop_h $crop_w --cropOffset $offset_y $offset_x "$tmp_heic" --out "$out_heic" &amp;&amp; rm "$tmp_heic"
+    done
+  done
+}
+EOF
+source ~/.zshrc</pre>
                         </div>
                     </div>
                 </div>
