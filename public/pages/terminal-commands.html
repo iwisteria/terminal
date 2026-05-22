@@ -645,11 +645,11 @@
             </div>
 
             <div class="command-item">
-                <div class="command-title">Instagram動画ダウンロード（yt-dlp）</div>
-                <div class="command-desc">MacのターミナルでInstagramの動画をダウンロード。QuickTime対応コーデック（AV1→H.264→HEVC優先）でダウンロードし、タイムスタンプも修正してそのまま再生可能なmp4として保存</div>
+                <div class="command-title">Instagram動画ダウンロード（igdl）</div>
+                <div class="command-desc">QuickTime対応コーデック（AV1→H.264→HEVC優先）＋タイムスタンプ修正済みのエイリアス。そのまま再生可能なmp4として保存</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1]+bestaudio[ext=m4a]/bestvideo[vcodec^=hvc1]+bestaudio[ext=m4a]/bestvideo[vcodec^=hev1]+bestaudio[ext=m4a]/bestvideo+bestaudio" --remux-video mp4 --postprocessor-args "ffmpeg:-avoid_negative_ts make_zero" "URL"</pre>
+                    <pre class="command-code">igdl "URL"</pre>
                 </div>
                 <button class="shortcut-button" onclick="openModal('instagramDownloadModal')" style="margin-top: 1rem;">📖 ガイドの詳細を見る</button>
             </div>
@@ -2892,16 +2892,16 @@ done</pre>
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🎬 基本的な使用方法</h3>
                     <div class="info-box" style="background-color: #e6fffa; border-left-color: #38b6a8;">
                         <h4 style="color: #234e52; margin-bottom: 0.5rem;">基本コマンド（QuickTime対応）</h4>
-                        <p style="color: #4a5568; font-size: 0.875rem; margin-top: 0.25rem; margin-bottom: 0.5rem;">yt-dlpがデフォルトで選択するVP9コーデックはQuickTimeが非対応のため再生できません。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-f</code> でAV1→H.264→HEVCの順に優先し、さらに<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-avoid_negative_ts make_zero</code>で負のタイムスタンプも修正します。</p>
+                        <p style="color: #4a5568; font-size: 0.875rem; margin-top: 0.25rem; margin-bottom: 0.5rem;">最高画質でダウンロード後、ffmpegで自動的にH.264（QuickTime対応）に変換します。VP9しか提供されていない動画も再生可能になります。</p>
                         <div class="code-wrapper" style="margin-top: 0.5rem; margin-bottom: 1rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1]+bestaudio[ext=m4a]/bestvideo[vcodec^=hvc1]+bestaudio[ext=m4a]/bestvideo[vcodec^=hev1]+bestaudio[ext=m4a]/bestvideo+bestaudio" --remux-video mp4 --postprocessor-args "ffmpeg:-avoid_negative_ts make_zero" "URL"</pre>
+                            <pre class="command-code">igdl "URL"</pre>
                         </div>
 
                         <h4 style="color: #234e52; margin-bottom: 0.5rem;">例</h4>
                         <div class="code-wrapper" style="margin-top: 0.5rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1]+bestaudio[ext=m4a]/bestvideo[vcodec^=hvc1]+bestaudio[ext=m4a]/bestvideo[vcodec^=hev1]+bestaudio[ext=m4a]/bestvideo+bestaudio" --remux-video mp4 --postprocessor-args "ffmpeg:-avoid_negative_ts make_zero" "https://www.instagram.com/p/CzBVWX8pc-C/"</pre>
+                            <pre class="command-code">igdl "https://www.instagram.com/p/CzBVWX8pc-C/"</pre>
                         </div>
                     </div>
 
@@ -2927,22 +2927,21 @@ done</pre>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💾 よく使うコマンド例</h3>
                     <div class="info-box" style="background-color: #fff5f7; border-left-color: #d69e2e;">
-                        <h4 style="color: #6b2c2c; margin-bottom: 0.5rem;">Downloadsフォルダに保存（QuickTime対応）</h4>
+                        <h4 style="color: #6b2c2c; margin-bottom: 0.5rem;">Downloadsフォルダに保存</h4>
                         <div class="code-wrapper" style="margin-top: 0.5rem; margin-bottom: 1rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1]+bestaudio[ext=m4a]/bestvideo[vcodec^=hvc1]+bestaudio[ext=m4a]/bestvideo[vcodec^=hev1]+bestaudio[ext=m4a]/bestvideo+bestaudio" --remux-video mp4 --postprocessor-args "ffmpeg:-avoid_negative_ts make_zero" -o "~/Downloads/%(title)s.%(ext)s" "https://www.instagram.com/p/XXXXXXXXXXXX/"</pre>
+                            <pre class="command-code">igdl -o "~/Downloads/%(title)s.%(ext)s" "https://www.instagram.com/p/XXXXXXXXXXXX/"</pre>
                         </div>
                     </div>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔧 トラブルシューティング</h3>
                     <div class="info-box" style="background-color: #fed7d7; border-left-color: #c53030;">
                         <h4 style="color: #742a2a; margin-bottom: 0.5rem;">QuickTimeで再生できない</h4>
-                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>原因①（コーデック）</strong>: yt-dlpがデフォルトで選ぶVP9コーデックはQuickTimeが非対応。上記の基本コマンドで <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-f</code> オプションによりAV1/H.264/HEVCを優先してダウンロードされます。</p>
-                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>原因②（タイムスタンプ）</strong>: 動画に負のタイムスタンプが含まれるとQuickTimeが処理できない。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-avoid_negative_ts make_zero</code>で修正されます。</p>
-                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>既にダウンロード済みのファイルをffmpegで修正：</strong></p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>原因</strong>: InstagramがVP9コーデックのみ配信している場合があり、QuickTimeはVP9を再生できません。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">igdl</code>はダウンロード後に自動でH.264に変換するため解決されます。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>既にダウンロード済みのVP9ファイルをH.264に変換：</strong></p>
                         <div class="code-wrapper" style="margin-top: 0.5rem; margin-bottom: 1rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">ffmpeg -i input.mp4 -c copy -avoid_negative_ts make_zero output_fixed.mp4</pre>
+                            <pre class="command-code">ffmpeg -i input.mp4 -c:v libx264 -crf 23 -c:a copy -avoid_negative_ts make_zero output_fixed.mp4</pre>
                         </div>
 
                         <h4 style="color: #742a2a; margin-bottom: 0.5rem; margin-top: 1rem;">エラー：yt-dlp: command not found</h4>
