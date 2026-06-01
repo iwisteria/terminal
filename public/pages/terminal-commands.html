@@ -410,7 +410,7 @@
         <div class="header">
             <h1>ターミナルコマンド集</h1>
             <p>よく使うコマンドとエイリアスのリファレンス</p>
-            <div class="last-update">更新: 2026-05-05 10:00</div>
+            <div class="last-update">更新: 2026-06-02 10:00</div>
         </div>
 
         <div class="toc">
@@ -424,7 +424,11 @@
                         <li><a href="#video-processing">動画処理</a></li>
                         <li><a href="#printing">印刷</a></li>
                         <li><a href="#compression">圧縮・解凍</a></li>
-                        <li><a href="#pdf-processing">PDF処理</a></li>
+                        <li><a href="#pdf-processing">PDF処理</a>
+                        <ul>
+                            <li><a href="#spgs">spgs — PDF→グレースケールHEIC変換</a></li>
+                        </ul>
+                    </li>
                         <li><a href="#audio-processing">音声処理</a></li>
                         <li><a href="#sheet-music">楽譜</a></li>
                     </ul>
@@ -791,6 +795,16 @@
                     <pre class="command-code">p2h</pre>
                 </div>
                 <button class="shortcut-button" onclick="openModal('p2hModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item" id="spgs">
+                <div class="command-title">spgs</div>
+                <div class="command-desc">カレントディレクトリの全PDFをページごとに分割し、グレースケールHEIC画像に変換（200dpi・Numbersへの貼り付けA4印刷向け）</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">spgs</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('spgsModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
             <!-- 楽譜 -->
@@ -2833,6 +2847,91 @@ p2h() {
       sips --cropToHeightWidth $crop_h $crop_w --cropOffset $offset_y $offset_x "$tmp_heic" --out "$out_heic" &amp;&amp; rm "$tmp_heic"
     done
   done
+}
+EOF
+source ~/.zshrc</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- spgsエイリアス詳細モーダル -->
+        <div id="spgsModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📄 spgs関数の詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>コマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">spgs</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリの全PDFを1ページずつ分割し、グレースケールのHEIC画像に変換します。Numbersに貼り付けてA4印刷することを想定した設定です。中間ファイルは処理後に自動削除されます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>変換したいPDFが含まれるフォルダへ移動</li>
+                            <li>ターミナルで <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">spgs</code> を実行</li>
+                            <li>各ページが <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">ファイル名_page0001.heic</code> 等の形式で同フォルダに出力されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 処理内容</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>入力形式: PDF（複数ページ対応）</li>
+                        <li>出力形式: HEIC（quality 60）</li>
+                        <li>解像度: 200dpi</li>
+                        <li>最大サイズ: 1654×2339px（A4・200dpi）</li>
+                        <li>カラー: グレースケール</li>
+                        <li>出力先: 同フォルダ内</li>
+                        <li>必要ツール: pdftk、ImageMagick（magick）</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🛠️ 依存ツールのインストール</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">brew install pdftk-java imagemagick</pre>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 関数の設定（初回のみ）</h3>
+                    <div class="info-box" style="background-color: #fef5e7; border-left-color: #f39c12;">
+                        <h3 style="color: #6b5b0f;">🔧 ~/.zshrc への追加</h3>
+                        <p style="color: #2d3748; margin-bottom: 0.75rem;">以下のコマンドを実行すると関数が登録されます:</p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">cat >> ~/.zshrc &lt;&lt; 'EOF'
+
+spgs() {
+  local tmpdir=$(mktemp -d)
+
+  for file in *.pdf; do
+    local base=$(basename "$file" .pdf)
+
+    pdftk "$file" burst output "${tmpdir}/${base}_page%04d.pdf"
+
+    for page in "${tmpdir}/${base}_page"*.pdf; do
+      local pagename=$(basename "$page" .pdf)
+      magick -density 200 "$page" \
+        -colorspace Gray \
+        -resize 1654x2339\> \
+        -units PixelsPerInch \
+        -resample 200 \
+        -quality 60 \
+        "${pagename}.heic"
+    done
+  done
+
+  rm -rf "$tmpdir"
+  rm -f doc_data.txt
 }
 EOF
 source ~/.zshrc</pre>
