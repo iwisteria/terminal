@@ -429,6 +429,7 @@
                             <li><a href="#spgs">spgs — PDF→グレースケールHEIC変換</a></li>
                         </ul>
                     </li>
+                        <li><a href="#accounting">経理用</a></li>
                         <li><a href="#audio-processing">音声処理</a></li>
                         <li><a href="#sheet-music">楽譜</a></li>
                     </ul>
@@ -815,6 +816,44 @@
                     <pre class="command-code">spgs</pre>
                 </div>
                 <button class="shortcut-button" onclick="openModal('spgsModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <!-- 経理用 -->
+            <div class="category-heading" id="accounting">
+                <span class="category-icon">🧾</span>
+                <span>経理用</span>
+            </div>
+
+            <div class="info-box" style="margin-top: 1.5rem; background-color: #ebf8ff; border-left-color: #3182ce;">
+                <h3 style="color: #1a365d;">🔑 Claude APIキーについて</h3>
+                <p style="color: #2d3748; margin-bottom: 0.75rem;"><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">sdrn</code> と <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">arch</code> はどちらも内部で Claude API を使用します。APIキーは <strong>macOS Keychain に保存済み</strong>で、ターミナルを開くたびに自動的に読み込まれます。毎回入力する必要はありません。</p>
+                <p style="color: #2d3748; margin-bottom: 0.5rem;">キーを更新する必要が生じた場合は以下を実行：</p>
+                <div class="code-wrapper" style="margin-top: 0.5rem;">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">security add-generic-password -U -a "$USER" -s "ANTHROPIC_API_KEY" -w "新しいキー"</pre>
+                </div>
+            </div>
+
+            <div class="command-item" id="sdrn">
+                <div class="command-title">sdrn</div>
+                <div class="command-desc">請求書PDFを分割・リネームするPythonスクリプトを実行</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">sdrn</pre>
+                </div>
+                <div class="alias-tag">使用方法: ~/Desktop/請求書/ で「sdrn」と入力して実行</div>
+                <button class="shortcut-button" onclick="openModal('sdrnModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item" id="arch">
+                <div class="command-title">arch</div>
+                <div class="command-desc">送付用フォルダ内の請求書PDFをClaude APIで解析し、保存用ファイル名にリネームして保存用フォルダへ移動</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">arch</pre>
+                </div>
+                <div class="alias-tag">使用方法: ~/Desktop/請求書/送付用/ で「arch」と入力して実行</div>
+                <button class="shortcut-button" onclick="openModal('archModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
             <!-- 楽譜 -->
@@ -3304,6 +3343,165 @@ done</pre>
                     <div class="code-wrapper" style="margin-top: 0.75rem;">
                         <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                         <pre class="command-code">alias tw='for f in *.jpg *.jpeg(N); do magick "$f" -resize 90% -level 20%,95% -gravity center -extent 2050x2980 "out_${f%.*}.jpg"; done && magick out_*.jpg -compress JPEG -quality 30 output.pdf'</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- sdrnエイリアス詳細モーダル -->
+        <div id="sdrnModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🧾 sdrnエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">sdrn</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">まとめPDFを1ページずつ分割し、Claude APIで各ページの請求書情報（請求先・請求日・金額・対象期間）を読み取って、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">請求書 令和〇年〇月分 〇〇様.pdf</code> の形式でリネームし、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">送付用/</code> フォルダへ保存します。PDFのメタデータ（タイトル・作成者）も自動設定されます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">~/Desktop/請求書/</code> にまとめPDFを置く</li>
+                            <li>ターミナルで <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">sdrn</code> を実行（PDFが1つの場合は自動検出）</li>
+                            <li>ページごとに解析結果が表示される</li>
+                            <li>対象期間が取得できない場合は手動入力を求められる</li>
+                            <li>処理済みファイルが <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">~/Desktop/請求書/送付用/</code> に保存される</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-box" style="margin-top: 1rem; background-color: #f0fff4; border-left-color: #48bb78;">
+                        <p style="color: #2d3748; margin: 0;"><strong>複数PDFがある場合:</strong> ファイル名を引数で指定できます</p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">sdrn まとめ.pdf</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 処理内容</h3>
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">1️⃣ PDF分割</div>
+                            <p style="color: #718096; margin: 0;">pypdfを使ってまとめPDFを1ページずつ一時フォルダに分割します。</p>
+                        </div>
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">2️⃣ Claude APIで情報抽出</div>
+                            <p style="color: #718096; margin: 0;">各ページをClaude APIに送信し、請求先・請求日・金額・対象期間をJSON形式で取得します。</p>
+                        </div>
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">3️⃣ ファイル名生成・保存</div>
+                            <p style="color: #718096; margin: 0;"><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">請求書 令和〇年〇月分 〇〇様.pdf</code> の形式でリネームし、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">送付用/</code> フォルダへコピーします。</p>
+                        </div>
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">4️⃣ メタデータ設定</div>
+                            <p style="color: #718096; margin: 0;">PDFのタイトルをファイル名に、作成者を「伊藤正昭」に設定します。</p>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 出力ファイル名の例</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">請求書 令和8年5月分 株式会社〇〇様.pdf</pre>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🛠️ 必要環境</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>Python仮想環境: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">~/invoice-env/</code></li>
+                        <li>依存ライブラリ: anthropic, pypdf</li>
+                        <li>スクリプト: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">~/Desktop/請求書/split_and_rename.py</code></li>
+                        <li>ANTHROPIC_API_KEY 環境変数が必要</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のエイリアス設定</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">alias sdrn='~/invoice-env/bin/python3 ~/Desktop/請求書/split_and_rename.py'</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- archエイリアス詳細モーダル -->
+        <div id="archModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🗂️ archエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">arch</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントフォルダ内の請求書PDFをClaude APIで解析し、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">YYMMDD請求先名金額.pdf</code> の形式でリネームして <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">保存用/</code> フォルダへ移動します。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">sdrn</code> で送付用フォルダに出力したPDFを整理・保存する際に使います。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">~/Desktop/請求書/送付用/</code> に請求書PDFを用意（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">sdrn</code> 実行後など）</li>
+                            <li>ターミナルでそのフォルダへ移動して <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">arch</code> を実行</li>
+                            <li>対象PDFの一覧が表示され、確認後 <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">Y</code> で処理開始</li>
+                            <li>処理済みファイルが <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">保存用/</code> フォルダへ移動される（元ファイルは削除）</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 処理内容</h3>
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">1️⃣ PDF一覧の表示と確認</div>
+                            <p style="color: #718096; margin: 0;">カレントフォルダのPDFをアルファベット順に一覧表示し、処理開始の確認を求めます。</p>
+                        </div>
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">2️⃣ Claude APIで情報抽出</div>
+                            <p style="color: #718096; margin: 0;">各PDFをClaude APIに送信し、請求先・請求日・金額をJSON形式で取得します。</p>
+                        </div>
+                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px;">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">3️⃣ リネーム・移動</div>
+                            <p style="color: #718096; margin: 0;"><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">YYMMDD請求先名金額.pdf</code> 形式にリネームして <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">保存用/</code> フォルダへ移動します（元ファイルは削除）。</p>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 出力ファイル名の例</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">260601株式会社〇〇50000.pdf</pre>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔗 経理ワークフロー</h3>
+                    <div class="info-box" style="background-color: #f0fff4; border-left-color: #48bb78;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">sdrn</code> — まとめPDFを分割・リネームして <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">送付用/</code> へ保存</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">arch</code> — 送付後、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">保存用/</code> へアーカイブ</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🛠️ 必要環境</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>Python仮想環境: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">~/invoice-env/</code></li>
+                        <li>依存ライブラリ: anthropic</li>
+                        <li>スクリプト: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">~/Desktop/請求書/archive.py</code></li>
+                        <li>ANTHROPIC_API_KEY 環境変数が必要</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のエイリアス設定</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">alias arch='~/invoice-env/bin/python3 ~/Desktop/請求書/archive.py'</pre>
                     </div>
                 </div>
             </div>
