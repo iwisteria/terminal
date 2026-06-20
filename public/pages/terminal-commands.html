@@ -410,7 +410,7 @@
         <div class="header">
             <h1>ターミナルコマンド集</h1>
             <p>よく使うコマンドとエイリアスのリファレンス</p>
-            <div class="last-update">更新: 2026-06-06</div>
+            <div class="last-update">更新: 2026-06-20</div>
         </div>
 
         <div class="toc">
@@ -427,6 +427,7 @@
                         <li><a href="#pdf-processing">PDF処理</a>
                         <ul>
                             <li><a href="#spgs">spgs — PDF→グレースケールHEIC変換</a></li>
+                            <li><a href="#gz2p">gz2p — 画像→PDF結合</a></li>
                         </ul>
                     </li>
                         <li><a href="#accounting">経理用</a></li>
@@ -817,6 +818,16 @@
                     <pre class="command-code">spgs</pre>
                 </div>
                 <button class="shortcut-button" onclick="openModal('spgsModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item" id="gz2p">
+                <div class="command-title">gz2p</div>
+                <div class="command-desc">カレントディレクトリの画像（HEIC/JPG/PNG）をJPEG品質90%に変換し、ファイル名順にソートして1つのPDFに結合。出力ファイル名は output_YYYYMMDD.pdf</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">gz2p</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('gz2pModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
             <!-- 経理用 -->
@@ -3503,6 +3514,54 @@ done</pre>
                     <div class="code-wrapper" style="margin-top: 0.75rem;">
                         <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                         <pre class="command-code">alias arch='~/invoice-env/bin/python3 ~/Desktop/請求書/archive.py'</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- gz2pエイリアス詳細モーダル -->
+        <div id="gz2pModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📄 gz2pエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">gz2p</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリの画像ファイル（HEIC/JPG/PNG）をJPEGに変換し、ファイル名順にソートして1つのPDFに結合します。一時ファイルは処理後に自動削除され、出力PDFは <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">output_YYYYMMDD.pdf</code> の形式で保存されます。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>結合したい画像ファイルが入ったフォルダへ移動</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">gz2p</code>コマンドを実行</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">output_YYYYMMDD.pdf</code> が同じフォルダに出力されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 変換設定</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>対応形式: HEIC、JPG、PNG（大文字・小文字どちらも対応）</li>
+                        <li>JPEG圧縮品質: 90%（sips使用）</li>
+                        <li>ソート: 数値順 (sort -V)</li>
+                        <li>PDF結合: macOS内蔵の Automator アクションを使用</li>
+                        <li>出力ファイル名: output_YYYYMMDD.pdf（実行日付）</li>
+                        <li>一時ファイル: 処理後に自動削除</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のエイリアス設定</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">alias gz2p='tmpdir=$(mktemp -d); outname="output_$(date +%Y%m%d).pdf"; setopt nullglob; files=(*.heic *.HEIC *.jpg *.JPG *.jpeg *.JPEG *.png *.PNG); unsetopt nullglob; sorted=($(printf '"'"'%s\n'"'"' "${files[@]}" | sort -V)); pdfs=(); for f in "${sorted[@]}"; do tmpjpg="$tmpdir/${f%.*}.jpg"; tmppdf="$tmpdir/${f%.*}.pdf"; sips -s format jpeg -s formatOptions 90 "$f" --out "$tmpjpg" > /dev/null 2>&1; cupsfilter -i image/jpeg -m application/pdf "$tmpjpg" > "$tmppdf" 2>/dev/null; pdfs+=("$tmppdf"); done; "/System/Library/Automator/Combine PDF Pages.action/Contents/MacOS/join" -o "$outname" "${pdfs[@]}"; rm -rf "$tmpdir"; echo "完了: $outname"'</pre>
                     </div>
                 </div>
             </div>
