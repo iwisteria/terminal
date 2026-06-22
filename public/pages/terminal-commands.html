@@ -801,13 +801,13 @@
                 <button class="shortcut-button" onclick="openModal('pdfprtModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
             <div class="command-item">
-                <div class="command-title">p2h</div>
-                <div class="command-desc">カレントディレクトリのPDFをHEICに変換し、A4縦アスペクト比で中央95%トリム</div>
+                <div class="command-title">p2ha4</div>
+                <div class="command-desc">カレントディレクトリのPDFをHEICに変換し、A4縦アスペクト比で中央クロップ（割合を引数で指定可能、デフォルト100%）</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">p2h</pre>
+                    <pre class="command-code">p2ha4</pre>
                 </div>
-                <button class="shortcut-button" onclick="openModal('p2hModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+                <button class="shortcut-button" onclick="openModal('p2ha4Modal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
             <div class="command-item" id="spgs">
@@ -2886,11 +2886,11 @@ PYTHON_EOF
             </div>
         </div>
 
-        <!-- p2h関数詳細モーダル -->
-        <div id="p2hModal" class="modal" onclick="closeModal(event)">
+        <!-- p2ha4関数詳細モーダル -->
+        <div id="p2ha4Modal" class="modal" onclick="closeModal(event)">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <div class="modal-header">
-                    <h2>📄 p2h関数の詳細</h2>
+                    <h2>📄 p2ha4関数の詳細</h2>
                     <button class="modal-close" onclick="closeModal()">&times;</button>
                 </div>
 
@@ -2899,18 +2899,19 @@ PYTHON_EOF
                         <h3>コマンド</h3>
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">p2h</pre>
+                            <pre class="command-code">p2ha4</pre>
                         </div>
                     </div>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
-                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリの .pdf ファイルをページごとにHEICへ変換し、A4縦アスペクト比（210:297）で中央基準95%にトリムします。中間ファイルは自動的に削除されます。</p>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリの .pdf ファイルをページごとにHEICへ変換し、A4縦アスペクト比（210:297）で中央クロップします。クロップ割合を引数で指定できます（デフォルト: 100%）。中間ファイルは自動的に削除されます。</p>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
                     <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
                         <ol style="margin-left: 1.5rem; color: #2d3748;">
                             <li>変換したいPDFが含まれるフォルダへ移動</li>
-                            <li>ターミナルで <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">p2h</code> を実行</li>
+                            <li>ターミナルで <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">p2ha4</code> を実行（引数なしでクロップ100%）</li>
+                            <li>クロップ割合を指定する場合: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">p2ha4 95</code>（95%でクロップ）</li>
                             <li>各ページが <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">ファイル名_0000.heic</code> 等の形式で出力されます</li>
                         </ol>
                     </div>
@@ -2921,7 +2922,7 @@ PYTHON_EOF
                         <li>出力形式: HEIC</li>
                         <li>解像度: 300dpi</li>
                         <li>アスペクト比: A4縦（210:297）</li>
-                        <li>トリム: 中央基準95%</li>
+                        <li>クロップ割合: 引数で指定（デフォルト100%、例: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">p2ha4 95</code> で95%）</li>
                         <li>出力ファイル名: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">元ファイル名_0000.heic</code>（ページ番号付き）</li>
                         <li>必要ツール: ImageMagick（magick）、heif-enc、sips、bc</li>
                     </ul>
@@ -2933,7 +2934,8 @@ PYTHON_EOF
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                             <pre class="command-code">cat >> ~/.zshrc << 'EOF'
-p2h() {
+p2ha4() {
+  local pct=${1:-100}
   for pdf in *.pdf; do
     [ -f "$pdf" ] || continue
     base="${pdf%.*}"
@@ -2945,8 +2947,8 @@ p2h() {
       out_heic="${stem}.heic"
       heif-enc "$png" -o "$tmp_heic" && rm "$png"
       read w h < &lt;(sips -g pixelWidth -g pixelHeight "$tmp_heic" | awk '/pixelWidth/{w=$2} /pixelHeight/{h=$2} END{print w, h}')
-      max_w=$(( w * 95 / 100 ))
-      max_h=$(( h * 95 / 100 ))
+      max_w=$(( w * pct / 100 ))
+      max_h=$(( h * pct / 100 ))
       if (( max_w * 297 >= max_h * 210 )); then
         crop_h=$max_h
         crop_w=$(echo "scale=0; $max_h * 210 / 297" | bc)
