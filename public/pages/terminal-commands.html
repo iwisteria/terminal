@@ -410,7 +410,7 @@
         <div class="header">
             <h1>ターミナルコマンド集</h1>
             <p>よく使うコマンドとエイリアスのリファレンス</p>
-            <div class="last-update">更新: 2026-06-20</div>
+            <div class="last-update">更新: 2026-06-23</div>
         </div>
 
         <div class="toc">
@@ -617,6 +617,16 @@
                     <pre class="command-code">trim95</pre>
                 </div>
                 <button class="shortcut-button" onclick="openModal('trim95Modal')" style="margin-top: 1rem;">📖 関数の詳細を見る</button>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">rs15</div>
+                <div class="command-desc">カレントディレクトリのHEIC画像を最長辺1500px・72DPIにリサイズし、resized_プレフィックスで保存（sips使用）</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">rs15</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('rs15Modal')" style="margin-top: 1rem;">📖 関数の詳細を見る</button>
             </div>
 
             <!-- ファイル操作 -->
@@ -3639,6 +3649,62 @@ done</pre>
                     <div class="code-wrapper" style="margin-top: 0.75rem;">
                         <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                         <pre class="command-code">alias gz2p='tmpdir=$(mktemp -d); outname="output_$(date +%Y%m%d).pdf"; setopt nullglob; files=(*.heic *.HEIC *.jpg *.JPG *.jpeg *.JPEG *.png *.PNG); unsetopt nullglob; sorted=($(printf '"'"'%s\n'"'"' "${files[@]}" | sort -V)); pdfs=(); for f in "${sorted[@]}"; do tmpjpg="$tmpdir/${f%.*}.jpg"; tmppdf="$tmpdir/${f%.*}.pdf"; sips -s format jpeg -s formatOptions 90 "$f" --out "$tmpjpg" > /dev/null 2>&1; cupsfilter -i image/jpeg -m application/pdf "$tmpjpg" > "$tmppdf" 2>/dev/null; pdfs+=("$tmppdf"); done; "/System/Library/Automator/Combine PDF Pages.action/Contents/MacOS/join" -o "$outname" "${pdfs[@]}"; rm -rf "$tmpdir"; echo "完了: $outname"'</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- rs15関数詳細モーダル -->
+        <div id="rs15Modal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ rs15関数の詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>実行コマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">rs15</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリの <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">*.heic</code> / <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">*.HEIC</code> ファイルを最長辺 1500px・解像度 72 DPI にリサイズします。macOS 標準の <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">sips</code> を使用するため、ImageMagick 不要。元ファイルはそのまま残し、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">resized_</code> プレフィックスを付けて出力します。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>リサイズしたい HEIC 画像が含まれるフォルダへ移動</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">rs15</code>を実行</li>
+                            <li>各ファイルの <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">resized_元ファイル名.heic</code> が生成されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 変換設定</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>入力形式: HEIC（*.heic / *.HEIC）</li>
+                        <li>最長辺: 1500px（アスペクト比を保持）</li>
+                        <li>解像度: 72 DPI（dpiWidth / dpiHeight）</li>
+                        <li>出力: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">resized_元ファイル名.heic</code>（元ファイルは保持）</li>
+                        <li>必要ツール: sips（macOS 標準搭載、追加インストール不要）</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 関数の登録コマンド</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">cat >> ~/.zshrc << 'EOF'
+function rs15() {
+  setopt nullglob
+  for file in *.heic *.HEIC; do
+    sips -Z 1500 -s dpiWidth 72 -s dpiHeight 72 "$file" --out "resized_${file}"
+  done
+  unsetopt nullglob
+}
+EOF
+source ~/.zshrc</pre>
                     </div>
                 </div>
             </div>
