@@ -428,6 +428,7 @@
                         <ul>
                             <li><a href="#spgs">spgs — PDF→グレースケールHEIC変換</a></li>
                             <li><a href="#gz2p">gz2p — 画像→PDF結合</a></li>
+                            <li><a href="#pmeta">pmeta — PDFメタ情報一括変更</a></li>
                         </ul>
                     </li>
                         <li><a href="#accounting">経理用</a></li>
@@ -847,6 +848,16 @@
                     <pre class="command-code">gz2p</pre>
                 </div>
                 <button class="shortcut-button" onclick="openModal('gz2pModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
+
+            <div class="command-item" id="pmeta">
+                <div class="command-title">pmeta</div>
+                <div class="command-desc">カレントディレクトリの全PDFファイルのメタ情報（タイトル・作成者）をファイル名と氏名に一括書き換え。Pages書き出しPDFのメタ情報修正に使用</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">pmeta</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('pmetaModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
             <!-- 経理用 -->
@@ -3703,6 +3714,60 @@ function rs15() {
   done
   unsetopt nullglob
 }
+EOF
+source ~/.zshrc</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- pmetaエイリアス詳細モーダル -->
+        <div id="pmetaModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>📄 pmetaエイリアスの詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>エイリアスコマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">pmeta</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリの全 PDF ファイルに対して、Title をファイル名（拡張子なし）、Author と Creator を「行政書士 伊藤正昭」に一括書き換えます。Pages で書き出した PDF に「名称未設定.pages」「Pages」のまま残るメタ情報を修正するために使用します。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>対象の PDF が入ったフォルダへ移動</li>
+                            <li>ターミナルで <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">pmeta</code> を実行</li>
+                            <li>複数 PDF がある場合は一括処理され、各ファイルに「完了: ファイル名」と表示されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 設定されるメタ情報</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>Title: ファイル名（拡張子なし）</li>
+                        <li>Author: 行政書士 伊藤正昭</li>
+                        <li>Creator: 行政書士 伊藤正昭</li>
+                        <li>元ファイルを直接上書き（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-overwrite_original</code>）</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🛠️ 必要環境</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>exiftool（未導入の場合: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">brew install exiftool</code>）</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 エイリアスの登録コマンド</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">cat >> ~/.zshrc << 'EOF'
+alias pmeta='for pdf in *.pdf; do [ -f "$pdf" ] || continue; base="${pdf%.pdf}"; exiftool -Title="$base" -Author="行政書士 伊藤正昭" -Creator="行政書士 伊藤正昭" -overwrite_original "$pdf"; echo "完了: $pdf"; done'
 EOF
 source ~/.zshrc</pre>
                     </div>
