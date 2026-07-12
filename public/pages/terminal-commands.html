@@ -155,6 +155,45 @@
             margin-top: 0;
         }
 
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-button {
+            background-color: #edf2f7;
+            color: #2d3748;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .tab-button:hover {
+            background-color: #e2e8f0;
+        }
+
+        .tab-button.active {
+            background-color: #4299e1;
+            color: white;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
         .category-icon {
             font-size: 1.6rem;
         }
@@ -386,6 +425,11 @@
                 font-size: 0.75rem;
             }
 
+            .tab-button {
+                padding: 0.45rem 0.75rem;
+                font-size: 0.8rem;
+            }
+
             .modal-content {
                 width: 95%;
                 max-height: 90vh;
@@ -410,13 +454,30 @@
         <div class="header">
             <h1>ターミナルコマンド集</h1>
             <p>よく使うコマンドとエイリアスのリファレンス</p>
-            <div class="last-update">更新: 2026-06-23</div>
+            <div class="last-update">更新: 2026-07-12</div>
         </div>
 
-        <div class="toc">
-            <h3>📑 目次</h3>
-            <ul>
-                <li><a href="#aliases">エイリアス一覧</a>
+        <!-- エイリアス一覧 -->
+        <div class="section" id="aliases">
+            <h2>エイリアス一覧</h2>
+
+            <div class="tabs" role="tablist">
+                <button class="tab-button active" id="tab-btn-toc" onclick="openTab('toc')">📑 目次</button>
+                <button class="tab-button" id="tab-btn-software-management" onclick="openTab('software-management')">⚙️ ソフトウェア管理</button>
+                <button class="tab-button" id="tab-btn-image-conversion" onclick="openTab('image-conversion')">🖼️ 画像変換</button>
+                <button class="tab-button" id="tab-btn-file-operations" onclick="openTab('file-operations')">📁 ファイル操作</button>
+                <button class="tab-button" id="tab-btn-video-processing" onclick="openTab('video-processing')">🎬 動画処理</button>
+                <button class="tab-button" id="tab-btn-printing" onclick="openTab('printing')">🖨️ 印刷</button>
+                <button class="tab-button" id="tab-btn-compression" onclick="openTab('compression')">📦 圧縮・解凍</button>
+                <button class="tab-button" id="tab-btn-pdf-processing" onclick="openTab('pdf-processing')">📄 PDF処理</button>
+                <button class="tab-button" id="tab-btn-accounting" onclick="openTab('accounting')">🧾 経理用</button>
+                <button class="tab-button" id="tab-btn-sheet-music" onclick="openTab('sheet-music')">🎼 楽譜</button>
+                <button class="tab-button" id="tab-btn-audio-processing" onclick="openTab('audio-processing')">🎵 音声処理</button>
+            </div>
+
+            <div class="tab-panel active" id="tab-panel-toc">
+                <div class="toc">
+                    <h3>📑 目次</h3>
                     <ul>
                         <li><a href="#software-management">ソフトウェア管理</a></li>
                         <li><a href="#image-conversion">画像変換</a></li>
@@ -430,25 +491,21 @@
                             <li><a href="#gz2p">gz2p — 画像→PDF結合</a></li>
                             <li><a href="#pmeta">pmeta — PDFメタ情報一括変更</a></li>
                         </ul>
-                    </li>
+                        </li>
                         <li><a href="#accounting">経理用</a></li>
                         <li><a href="#audio-processing">音声処理</a></li>
                         <li><a href="#sheet-music">楽譜</a></li>
                     </ul>
-                </li>
-            </ul>
-        </div>
+                </div>
 
-        <div class="info-box">
-            <h3>📌 使い方</h3>
-            <p>以下のコマンドはターミナルで実行してください。コードの右上の「コピー」ボタンをクリックするとクリップボードにコピーできます。</p>
-            <button class="shortcut-button" onclick="openShortcutModal()">🎮 Macターミナルショートカットを見る</button>
-        </div>
+                <div class="info-box">
+                    <h3>📌 使い方</h3>
+                    <p>以下のコマンドはターミナルで実行してください。コードの右上の「コピー」ボタンをクリックするとクリップボードにコピーできます。</p>
+                    <button class="shortcut-button" onclick="openShortcutModal()">🎮 Macターミナルショートカットを見る</button>
+                </div>
+            </div>
 
-        <!-- エイリアス一覧 -->
-        <div class="section" id="aliases">
-            <h2>エイリアス一覧</h2>
-
+            <div class="tab-panel" id="tab-panel-software-management">
             <!-- ソフトウェア管理 -->
             <div class="category-heading" id="software-management">
                 <span class="category-icon">⚙️</span>
@@ -484,6 +541,9 @@
                 </div>
             </div>
 
+            </div>
+
+            <div class="tab-panel" id="tab-panel-image-conversion">
             <!-- 画像変換 -->
             <div class="category-heading" id="image-conversion">
                 <span class="category-icon">🖼️</span>
@@ -630,6 +690,9 @@
                 <button class="shortcut-button" onclick="openModal('rs15Modal')" style="margin-top: 1rem;">📖 関数の詳細を見る</button>
             </div>
 
+            </div>
+
+            <div class="tab-panel" id="tab-panel-file-operations">
             <!-- ファイル操作 -->
             <div class="category-heading" id="file-operations">
                 <span class="category-icon">📁</span>
@@ -646,6 +709,9 @@
                 <button class="shortcut-button" onclick="openModal('rnModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
+            </div>
+
+            <div class="tab-panel" id="tab-panel-video-processing">
             <!-- 動画処理 -->
             <div class="category-heading" id="video-processing">
                 <span class="category-icon">🎬</span>
@@ -691,6 +757,9 @@
                 </div>
             </div>
 
+            </div>
+
+            <div class="tab-panel" id="tab-panel-printing">
             <!-- 印刷 -->
             <div class="category-heading" id="printing">
                 <span class="category-icon">🖨️</span>
@@ -727,6 +796,9 @@
                 <button class="shortcut-button" onclick="openModal('printpdfcolorModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
+            </div>
+
+            <div class="tab-panel" id="tab-panel-compression">
             <!-- 圧縮・解凍 -->
             <div class="category-heading" id="compression">
                 <span class="category-icon">📦</span>
@@ -756,6 +828,9 @@
                 </ul>
             </div>
 
+            </div>
+
+            <div class="tab-panel" id="tab-panel-pdf-processing">
             <!-- PDF処理 -->
             <div class="category-heading" id="pdf-processing">
                 <span class="category-icon">📄</span>
@@ -860,6 +935,9 @@
                 <button class="shortcut-button" onclick="openModal('pmetaModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
+            </div>
+
+            <div class="tab-panel" id="tab-panel-accounting">
             <!-- 経理用 -->
             <div class="category-heading" id="accounting">
                 <span class="category-icon">🧾</span>
@@ -898,6 +976,9 @@
                 <button class="shortcut-button" onclick="openModal('archModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
+            </div>
+
+            <div class="tab-panel" id="tab-panel-sheet-music">
             <!-- 楽譜 -->
             <div class="category-heading" id="sheet-music">
                 <span class="category-icon">🎼</span>
@@ -935,6 +1016,9 @@
                 <button class="shortcut-button" onclick="openModal('gakuhuModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
+            </div>
+
+            <div class="tab-panel" id="tab-panel-audio-processing">
             <!-- 音声処理 -->
             <div class="category-heading" id="audio-processing">
                 <span class="category-icon">🎵</span>
@@ -949,6 +1033,7 @@
                     <pre class="command-code">mp3combine</pre>
                 </div>
                 <button class="shortcut-button" onclick="openModal('mp3combineModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+            </div>
             </div>
         </div>
 
@@ -1782,7 +1867,7 @@ source ~/.zshrc</pre>
                         <p style="color: #2d3748; margin-bottom: 1rem;"><strong>例1: 前処理なしで直接印刷</strong></p>
                         <div class="code-wrapper" style="margin-top: 0.75rem; margin-bottom: 1rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">$ cd <HEICファイルがあるフォルダ>
+                            <pre class="command-code">$ cd &lt;HEICファイルがあるフォルダ&gt;
 $ h2p
 ✓ 処理完了: photo1.heic
 ✓ 処理完了: photo2.heic</pre>
@@ -1793,7 +1878,7 @@ $ h2p
                         <p style="color: #2d3748; margin-bottom: 1rem;"><strong>例2: hrsz() で前処理してから印刷</strong></p>
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">$ cd <画像フォルダ>
+                            <pre class="command-code">$ cd &lt;画像フォルダ&gt;
 $ hrsz
 ✓ output/ に処理済み画像を生成
 $ cd output/
@@ -1877,7 +1962,7 @@ $ h2p
                         <p style="color: #2d3748; margin-bottom: 1rem;"><strong>例1: 複数の HEIC ファイルを処理</strong></p>
                         <div class="code-wrapper" style="margin-top: 0.75rem; margin-bottom: 1rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">$ cd <画像フォルダ>
+                            <pre class="command-code">$ cd &lt;画像フォルダ&gt;
 $ hrsz
 ✓ 処理完了: photo1.heic
 ✓ 処理完了: photo2.heic
@@ -1890,7 +1975,7 @@ $ hrsz
                         <p style="color: #2d3748; margin-bottom: 1rem;"><strong>例2: hrsz で前処理して、h2p で印刷</strong></p>
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">$ cd <画像フォルダ>
+                            <pre class="command-code">$ cd &lt;画像フォルダ&gt;
 $ hrsz
 ✅ 全ファイルが output フォルダに出力されました
 $ cp output/*.heic ~/editing/
@@ -4007,6 +4092,53 @@ source ~/.zshrc</pre>
                 });
             }
         });
+
+        // タブ切り替え制御
+        const SUBITEM_TO_TAB = {
+            spgs: 'pdf-processing',
+            gz2p: 'pdf-processing',
+            pmeta: 'pdf-processing',
+            sdrn: 'accounting',
+            arch: 'accounting'
+        };
+
+        function openTab(tabId, scrollTargetId) {
+            const panel = document.getElementById('tab-panel-' + tabId);
+            const button = document.getElementById('tab-btn-' + tabId);
+            if (!panel || !button) return;
+
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            panel.classList.add('active');
+            button.classList.add('active');
+
+            if (scrollTargetId) {
+                const target = document.getElementById(scrollTargetId);
+                if (target) {
+                    target.scrollIntoView({ block: 'start' });
+                }
+            }
+        }
+
+        // 目次内のリンクをクリックしたら対応するタブに切り替える
+        document.querySelectorAll('.toc a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const targetId = link.getAttribute('href').slice(1);
+                const tabId = SUBITEM_TO_TAB[targetId] || targetId;
+                openTab(tabId, targetId);
+            });
+        });
+
+        // URLハッシュに対応するタブがあれば開いた状態でページを表示
+        (() => {
+            const hash = location.hash.slice(1);
+            if (!hash) return;
+            const tabId = SUBITEM_TO_TAB[hash] || hash;
+            if (document.getElementById('tab-panel-' + tabId)) {
+                openTab(tabId, hash);
+            }
+        })();
     </script>
 </body>
 </html>
