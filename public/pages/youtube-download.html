@@ -430,7 +430,7 @@
                 <div class="command-desc">映像と音声がバラバラにダウンロードされた場合、ffmpeg で映像と音声を合成して一つのファイルにします。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">cd ~/Desktop/move && ffmpeg -i "aaa.mp4" -i "aaa.m4a" -c copy "aaa_merged.mp4"</pre>
+                    <pre class="command-code">ffmpeg -i "aaa.mp4" -i "aaa.m4a" -c copy "aaa_merged.mp4"</pre>
                 </div>
             </div>
 

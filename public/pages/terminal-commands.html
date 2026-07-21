@@ -592,7 +592,7 @@
 
             <div class="command-item">
                 <div class="command-title">img2webp</div>
-                <div class="command-desc">editing フォルダ内の画像ファイル（png, jpeg, jpg）を180px四方のWebpファイルに変換</div>
+                <div class="command-desc">カレントディレクトリの画像ファイル（png, jpeg, jpg）を180px四方のWebpファイルに変換</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                     <pre class="command-code">img2webp</pre>
@@ -602,7 +602,7 @@
 
             <div class="command-item">
                 <div class="command-title">genicon</div>
-                <div class="command-desc">editing フォルダ内の画像ファイル（png, jpeg, jpg）を32px、180px、256px四方の3種類のWebpアイコンに一度に生成</div>
+                <div class="command-desc">カレントディレクトリの画像ファイル（png, jpeg, jpg）を32px、180px、256px四方の3種類のWebpアイコンに一度に生成</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                     <pre class="command-code">genicon</pre>
@@ -750,10 +750,10 @@
 
             <div class="command-item">
                 <div class="command-title">動画から文字起こし（Whisper・一括処理）</div>
-                <div class="command-desc">文字起こししたい動画ファイル（mp4）を /Volumes/ExtStorage/作業フォルダ に入れてから実行してください。OpenAI Whisper で一括文字起こしし、結果は同フォルダに .txt ファイルとして保存されます。</div>
+                <div class="command-desc">文字起こししたい動画ファイル（mp4）をカレントディレクトリに置いてから実行してください。OpenAI Whisper で一括文字起こしし、結果は同フォルダに .txt ファイルとして保存されます。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">for f in "/Volumes/ExtStorage/作業フォルダ/"*.mp4; do whisper "$f" --language ja --output_format txt --output_dir "/Volumes/ExtStorage/作業フォルダ/"; done</pre>
+                    <pre class="command-code">for f in *.mp4; do whisper "$f" --language ja --output_format txt; done</pre>
                 </div>
             </div>
 
@@ -1147,11 +1147,6 @@
                         <pre class="command-code">herowebp() {
   local quality=50
   local method=6
-  if [ ! -d "$HOME/editing" ]; then
-    echo "Error: ~/editing directory not found"
-    return 1
-  fi
-  cd "$HOME/editing" || return 1
   for img in *.{jpg,jpeg,png,heic}; do
     if [ -f "$img" ]; then
       base="${img%.*}"
@@ -1210,11 +1205,6 @@
   local quality=50
   local method=6
   local count=0
-  if [ ! -d "$HOME/editing" ]; then
-    echo "Error: ~/editing directory not found"
-    return 1
-  fi
-  cd "$HOME/editing" || return 1
   for file in *.{jpg,jpeg,png,heic}; do
     if [ -f "$file" ]; then
       local base="${file%.*}"
@@ -1286,11 +1276,6 @@
   local quality=100
   local method=6
   local count=0
-  if [ ! -d "$HOME/editing" ]; then
-    echo "Error: ~/editing directory not found"
-    return 1
-  fi
-  cd "$HOME/editing" || return 1
   for file in *.{jpg,jpeg,png,heic}; do
     if [ -f "$file" ]; then
       local base="${file%.*}"
@@ -1436,7 +1421,7 @@
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
                     <div class="code-wrapper" style="margin-top: 0.75rem;">
                         <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                        <pre class="command-code">img2webp='for f in ~/editing/*.{png,jpeg,jpg}; do [ -f "$f" ] && cwebp -resize 180 180 -m 6 -q 50 "$f" -o "${f%.*}.webp" && echo "✓ $(basename "$f")" || echo "✗ $(basename "$f")"; done'</pre>
+                        <pre class="command-code">img2webp='for f in *.{png,jpeg,jpg}; do [ -f "$f" ] && cwebp -resize 180 180 -m 6 -q 50 "$f" -o "${f%.*}.webp" && echo "✓ $(basename "$f")" || echo "✗ $(basename "$f")"; done'</pre>
                     </div>
                 </div>
             </div>
@@ -1751,11 +1736,6 @@ source ~/.zshrc</pre>
                     <div class="code-wrapper" style="margin-top: 0.75rem;">
                         <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                         <pre class="command-code">generateicons() {
-  if [ ! -d "$HOME/editing" ]; then
-    echo "✗ エラー: ~/editing ディレクトリが見つかりません"
-    return 1
-  fi
-  cd "$HOME/editing" || return 1
   local count=0
   for file in *.png; do
     if [ -f "$file" ]; then
@@ -2619,7 +2599,7 @@ PYTHON_EOF
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
                     <div class="code-wrapper" style="margin-top: 0.75rem;">
                         <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                        <pre class="command-code">pdf2webp='for file in ~/editing/*.pdf; do convert -density 300 -colorspace sRGB -background white -flatten "$file" /tmp/temp.png && cwebp -resize 1200 0 -q 50 -m 6 /tmp/temp.png -o "${file%.pdf}.webp" && rm /tmp/temp.png; done'</pre>
+                        <pre class="command-code">pdf2webp='for file in *.pdf; do convert -density 300 -colorspace sRGB -background white -flatten "$file" /tmp/temp.png && cwebp -resize 1200 0 -q 50 -m 6 /tmp/temp.png -o "${file%.pdf}.webp" && rm /tmp/temp.png; done'</pre>
                     </div>
                 </div>
             </div>
@@ -2666,7 +2646,7 @@ PYTHON_EOF
                     <div class="code-wrapper" style="margin-top: 0.75rem;">
                         <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                         <pre class="command-code">pdf2png() {
-  for file in "$HOME/editing"/*.pdf; do
+  for file in *.pdf; do
     [ -f "$file" ] || continue
     output="${file%.pdf}.png"
     magick -density 300 "$file" -flatten -background white -resize 1200x "$output" && \
@@ -2741,7 +2721,7 @@ PYTHON_EOF
                         <h3>エイリアスコマンド</h3>
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">cd ~/editing && ls -1 *.mp4 *.m4v 2>/dev/null | awk '{print "file " $0}' > filelist.txt && ffmpeg -f concat -safe 0 -i filelist.txt -c:v copy -c:a copy output.mp4 && ffmpeg -i output.mp4 -c:v copy -c:a copy -movflags +faststart -color_range tv output_fixed.mp4 && mv output_fixed.mp4 output.mp4 && rm filelist.txt</pre>
+                            <pre class="command-code">ls -1 *.mp4 *.m4v 2>/dev/null | awk '{print "file " $0}' > filelist.txt && ffmpeg -f concat -safe 0 -i filelist.txt -c:v copy -c:a copy output.mp4 && ffmpeg -i output.mp4 -c:v copy -c:a copy -movflags +faststart -color_range tv output_fixed.mp4 && mv output_fixed.mp4 output.mp4 && rm filelist.txt</pre>
                         </div>
                     </div>
 
@@ -2749,37 +2729,31 @@ PYTHON_EOF
 
                     <div style="margin-bottom: 1.5rem;">
                         <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">1️⃣ 作業フォルダへ移動</div>
-                            <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">cd ~/editing</pre>
-                            <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">カレントディレクトリで処理します。</p>
-                        </div>
-
-                        <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">2️⃣ ファイル検索</div>
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">1️⃣ ファイル検索</div>
                             <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">ls -1 *.mp4 *.m4v 2>/dev/null</pre>
                             <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">カレントディレクトリのすべてのmp4とm4vファイルを取得します。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-1</code>フラグで1ファイルずつ1行に表示。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">2>/dev/null</code>はエラーメッセージを非表示にします。</p>
                         </div>
 
                         <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">3️⃣ ファイルリスト生成</div>
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">2️⃣ ファイルリスト生成</div>
                             <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">awk '{print "file " $0}' > filelist.txt</pre>
                             <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">各ファイルを1行ずつ処理し、FFmpegのconcat形式（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">file ファイル名</code>）でfilelist.txtに出力します。</p>
                         </div>
 
                         <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">4️⃣ MP4/M4Vファイル結合</div>
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">3️⃣ MP4/M4Vファイル結合</div>
                             <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">ffmpeg -f concat -safe 0 -i filelist.txt -c:v copy -c:a copy output.mp4</pre>
                             <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">FFmpegを使用してファイルリストを読み込み、すべてのmp4/m4vファイルを1つの<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">output.mp4</code>に結合します。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-c:v copy -c:a copy</code>はビデオとオーディオを再エンコードしません。</p>
                         </div>
 
                         <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">5️⃣ QuickTime対応メタデータ修正</div>
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">4️⃣ QuickTime対応メタデータ修正</div>
                             <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">ffmpeg -i output.mp4 -c:v copy -c:a copy -movflags +faststart -color_range tv output_fixed.mp4</pre>
                             <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">QuickTimeが正しく色を表示するようにメタデータを再適用します。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-movflags +faststart</code>でストリーミング対応、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-color_range tv</code>でテレビ標準色範囲を設定します。</p>
                         </div>
 
                         <div style="background-color: #edf2f7; padding: 1rem; border-radius: 8px;">
-                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">6️⃣ ファイル置き換え・クリーンアップ</div>
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem;">5️⃣ ファイル置き換え・クリーンアップ</div>
                             <pre class="command-code" style="margin: 0; padding: 0.75rem; background-color: #1a202c;">mv output_fixed.mp4 output.mp4 && rm filelist.txt</pre>
                             <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 0;">修正されたファイルを<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">output.mp4</code>に置き換え、一時ファイル<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">filelist.txt</code>を削除します。</p>
                         </div>
