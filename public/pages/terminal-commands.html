@@ -480,7 +480,11 @@
                     <h3>📑 目次</h3>
                     <ul>
                         <li><a href="#software-management">ソフトウェア管理</a></li>
-                        <li><a href="#image-conversion">画像変換</a></li>
+                        <li><a href="#image-conversion">画像変換</a>
+                        <ul>
+                            <li><a href="#dskw">dskw — 書類画像の傾き補正</a></li>
+                        </ul>
+                        </li>
                         <li><a href="#file-operations">ファイル操作</a></li>
                         <li><a href="#video-processing">動画処理</a></li>
                         <li><a href="#printing">印刷</a></li>
@@ -688,6 +692,16 @@
                     <pre class="command-code">rs15</pre>
                 </div>
                 <button class="shortcut-button" onclick="openModal('rs15Modal')" style="margin-top: 1rem;">📖 関数の詳細を見る</button>
+            </div>
+
+            <div class="command-item" id="dskw">
+                <div class="command-title">dskw</div>
+                <div class="command-desc">カレントディレクトリの書類画像（HEIC/PNG/JPG/JPEG）の傾きを自動補正。罫線のある表形式の書類に生じる「回転ずれ」と「せん断ずれ（平行四辺形状のゆがみ）」を2段階で検出・補正し、元ファイル名_corrected.拡張子 で出力（OpenCVの投影プロファイル法を使用）</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">dskw</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('dskwModal')" style="margin-top: 1rem;">📖 関数の詳細を見る</button>
             </div>
 
             </div>
@@ -3780,6 +3794,439 @@ source ~/.zshrc</pre>
             </div>
         </div>
 
+        <!-- dskw関数詳細モーダル -->
+        <div id="dskwModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ dskw関数の詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>実行コマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">dskw</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">PDFをHEICに変換してCanvaに取り込む運用の中で、罫線のある表形式の書類画像（自動車検査証記録事項など）に2種類の歪みが生じることが判明しました。</p>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li><strong>回転ずれ</strong>: 罫線全体がわずかに右下がり／右上がりになる</li>
+                        <li><strong>せん断ずれ</strong>: 垂直の罫線が左右で同じ角度だけ傾き、平行四辺形状になる</li>
+                    </ul>
+                    <p style="color: #718096; margin-bottom: 1rem;">単純な回転補正だけでは後者が残るため、回転＋せん断の2段階補正を行います。引数は取らず、カレントフォルダ内の対象画像を一括処理します。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>補正したい画像が入ったフォルダへ移動</li>
+                            <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">dskw</code>を実行</li>
+                            <li>各ファイルの <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">元ファイル名_corrected.拡張子</code> が生成されます</li>
+                            <li>実行中、検出角度・検出画素数・補正後の残存角度が表示されます</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 処理内容</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>対応拡張子: heic / png / jpg / jpeg（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">nocaseglob</code> により大文字小文字を区別しない）</li>
+                        <li>HEIC入力: 一時的に <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">sips</code> で PNG へ変換して補正、出力は PNG（中間PNGは自動削除）</li>
+                        <li>PNG/JPG/JPEG入力: 変換なしでそのまま補正、同じ拡張子で出力（拡張子は小文字化）</li>
+                        <li>出力ファイル名: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">元ファイル名_corrected.拡張子</code>（例: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">1.heic</code> → <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">1_corrected.png</code>）</li>
+                        <li>依存チェック: 実行時に opencv-python / numpy の有無を確認し、無ければ案内して終了</li>
+                        <li>罫線が検出できない場合: 警告を出し、補正せず元画像をコピー</li>
+                        <li>処理時間: 1枚あたり数秒（角度探索が総当たりのため）</li>
+                        <li>必要ツール: sips（macOS標準）、Python3、opencv-python、numpy</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔬 検出ロジック（投影プロファイル法）</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">線分を1本ずつ検出して角度を平均するのではなく、画像全体の罫線画素から一括で角度を決めます。</p>
+                    <ol style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>グレースケール化し、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">adaptiveThreshold</code>（平均法・ブロックサイズ31）で二値化</li>
+                        <li>モルフォロジー演算（オープニング）で罫線のみを抽出
+                            <ul style="margin-left: 1.5rem; color: #2d3748;">
+                                <li>縦罫線: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">(1, 高さ/60)</code> の縦長カーネル → 横線と文字が消える</li>
+                                <li>横罫線: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">(幅/60, 1)</code> の横長カーネル → 縦線と文字が消える</li>
+                            </ul>
+                        </li>
+                        <li>罫線画素について、候補角度ごとに投影プロファイルを作り、集中度（ヒストグラムの二乗和）が最大になる角度を探索する</li>
+                        <li>探索は2段階（粗探索: ±5度を0.05度刻み → 精密探索: 粗探索値の±0.08度を0.005度刻み）</li>
+                        <li>回転補正を適用</li>
+                        <li>回転補正後の画像でせん断角を測り直し、せん断補正を適用</li>
+                        <li>補正後に再測定し、残存角度を表示</li>
+                    </ol>
+                    <p style="color: #718096; margin-bottom: 1rem;">この方式の利点は、個々の線分の端点誤差が平均化され、画像全体の十数万〜二十万画素から1つの角度を決めるため、罫線が途中で分断されていても短くても結果に影響しないことです。</p>
+                    <p style="color: #718096; margin-bottom: 1rem;">実測値（動作確認済みサンプル6枚）は、検出値 回転 0.005〜0.17度／せん断 0〜0.70度に対し、補正後の残存はすべて 0.05度以内。3500px の画像で端から端まで約3pxのずれに相当し、目視でも解消を確認済みです。検出画素数の目安は横罫線 17万〜22万、縦罫線 3.4万〜4.8万画素です。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🛠️ 依存ライブラリのインストール（初回のみ）</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">pip3 install opencv-python numpy --break-system-packages</pre>
+                    </div>
+                    <p style="color: #718096; margin-top: 0.75rem; margin-bottom: 1rem;">一度入れれば以降は不要です。他のコマンドには影響しません。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 deskew.py の配置（初回のみ）</h3>
+                    <div class="info-box" style="background-color: #fef5e7; border-left-color: #f39c12;">
+                        <h3 style="color: #6b5b0f;">🔧 ~/bin/deskew.py の作成</h3>
+                        <p style="color: #2d3748; margin-bottom: 0.75rem;">既存のファイルがある場合は、先にバックアップを取ってください:</p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">cp ~/bin/deskew.py ~/bin/deskew.py.bak_$(TZ=Asia/Tokyo date "+%y%m%d%H%M")</pre>
+                        </div>
+                        <p style="color: #2d3748; margin-top: 1rem; margin-bottom: 0.75rem;">以下のコマンドを実行するとスクリプトが配置されます:</p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">cat &gt; ~/bin/deskew.py &lt;&lt; 'PYEOF'
+#!/usr/bin/env python3
+"""
+書類画像の傾き補正ツール（投影プロファイル法）
+
+モルフォロジー演算で罫線のみを抽出し、投影プロファイルの分散が
+最大になる角度を粗探索→精密探索の2段階で求める。
+線分ごとの端点誤差に左右されないため、Hough変換より安定する。
+"""
+
+import sys
+import math
+import cv2
+import numpy as np
+
+COARSE_RANGE = 5.0
+COARSE_STEP = 0.05
+FINE_SPAN = 0.08
+FINE_STEP = 0.005
+MIN_PIXELS = 2000
+MAX_SAMPLES = 400000
+
+
+def binarize(gray):
+    return cv2.adaptiveThreshold(
+        gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C,
+        cv2.THRESH_BINARY_INV, 31, 15)
+
+
+def extract_vertical(bw, h):
+    ksize = max(15, h // 60)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, ksize))
+    return cv2.morphologyEx(bw, cv2.MORPH_OPEN, kernel)
+
+
+def extract_horizontal(bw, w):
+    ksize = max(15, w // 60)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (ksize, 1))
+    return cv2.morphologyEx(bw, cv2.MORPH_OPEN, kernel)
+
+
+def _score(a_axis, b_axis, k, nbins, offset):
+    proj = a_axis - k * b_axis
+    idx = np.clip((proj + offset).astype(np.int32), 0, nbins - 1)
+    hist = np.bincount(idx, minlength=nbins).astype(np.float64)
+    return float((hist ** 2).sum())
+
+
+def _search(a_axis, b_axis, lo, hi, step, nbins, offset):
+    best_a, best_s = 0.0, -1.0
+    a = lo
+    while a &lt;= hi + 1e-9:
+        s = _score(a_axis, b_axis, math.tan(math.radians(a)), nbins, offset)
+        if s &gt; best_s:
+            best_s, best_a = s, a
+        a += step
+    return best_a
+
+
+def find_angle(mask, vertical):
+    pts = np.column_stack(np.nonzero(mask))
+    n = len(pts)
+    if n &lt; MIN_PIXELS:
+        return 0.0, n
+
+    ys = pts[:, 0].astype(np.float64)
+    xs = pts[:, 1].astype(np.float64)
+
+    if n &gt; MAX_SAMPLES:
+        sel = np.random.default_rng(0).choice(n, MAX_SAMPLES, replace=False)
+        ys, xs = ys[sel], xs[sel]
+
+    if vertical:
+        a_axis, b_axis = xs, ys
+        size, other = mask.shape[1], mask.shape[0]
+    else:
+        a_axis, b_axis = ys, xs
+        size, other = mask.shape[0], mask.shape[1]
+
+    b_axis = b_axis - b_axis.mean()
+    margin = int(math.tan(math.radians(COARSE_RANGE)) * other) + 10
+    nbins = size + 2 * margin
+
+    coarse = _search(a_axis, b_axis, -COARSE_RANGE, COARSE_RANGE,
+                     COARSE_STEP, nbins, margin)
+    fine = _search(a_axis, b_axis, coarse - FINE_SPAN, coarse + FINE_SPAN,
+                   FINE_STEP, nbins, margin)
+    return fine, n
+
+
+def measure(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    h, w = gray.shape
+    bw = binarize(gray)
+    rot, hn = find_angle(extract_horizontal(bw, w), vertical=False)
+    shear, vn = find_angle(extract_vertical(bw, h), vertical=True)
+    return rot, hn, shear, vn
+
+
+def measure_shear(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    bw = binarize(gray)
+    return find_angle(extract_vertical(bw, gray.shape[0]), vertical=True)
+
+
+def rotate_full(img, angle_deg):
+    h, w = img.shape[:2]
+    center = (w / 2, h / 2)
+    M = cv2.getRotationMatrix2D(center, angle_deg, 1.0)
+    cos, sin = abs(M[0, 0]), abs(M[0, 1])
+    new_w = int(h * sin + w * cos)
+    new_h = int(h * cos + w * sin)
+    M[0, 2] += (new_w / 2) - center[0]
+    M[1, 2] += (new_h / 2) - center[1]
+    return cv2.warpAffine(img, M, (new_w, new_h),
+                          flags=cv2.INTER_CUBIC, borderValue=(255, 255, 255))
+
+
+def shear_fix(img, angle_deg):
+    h, w = img.shape[:2]
+    k = math.tan(math.radians(angle_deg))
+    y_ref = h / 2
+    shift_max = abs(k) * (h / 2)
+    pad = int(math.ceil(shift_max)) + 5
+    new_w = w + 2 * pad
+    M = np.array([
+        [1, -k, pad + k * y_ref],
+        [0, 1, 0]
+    ], dtype=np.float64)
+    return cv2.warpAffine(img, M, (new_w, h),
+                          flags=cv2.INTER_CUBIC, borderValue=(255, 255, 255))
+
+
+def main():
+    if len(sys.argv) != 3:
+        print("使い方: python3 deskew.py input.png output.png")
+        sys.exit(1)
+
+    in_path, out_path = sys.argv[1], sys.argv[2]
+    img = cv2.imread(in_path)
+    if img is None:
+        print(f"エラー: 画像を読み込めません: {in_path}")
+        sys.exit(1)
+
+    rot, hn, shear, vn = measure(img)
+    print(f"[{in_path}] 回転角 {rot:+.4f} 度 (横罫線 {hn} 画素) / "
+          f"せん断角 {shear:+.4f} 度 (縦罫線 {vn} 画素)")
+
+    if hn &lt; MIN_PIXELS and vn &lt; MIN_PIXELS:
+        print(f"[{in_path}] 警告: 罫線を検出できませんでした。補正は行いません。")
+        cv2.imwrite(out_path, img)
+        sys.exit(0)
+
+    out = img
+    if abs(rot) &gt; 0.005:
+        out = rotate_full(out, rot)
+        shear, vn = measure_shear(out)
+        print(f"[{in_path}] 回転補正後のせん断角 {shear:+.4f} 度 "
+              f"(縦罫線 {vn} 画素)")
+    if abs(shear) &gt; 0.005:
+        out = shear_fix(out, shear)
+
+    r2, hn2, s2, vn2 = measure(out)
+    print(f"[{in_path}] 補正後の残存: 回転 {r2:+.4f} 度 / せん断 {s2:+.4f} 度")
+
+    cv2.imwrite(out_path, out)
+    print(f"[{in_path}] -&gt; [{out_path}] 補正完了\n")
+
+
+if __name__ == "__main__":
+    main()
+PYEOF</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 関数の登録（初回のみ）</h3>
+                    <div class="info-box" style="background-color: #fef5e7; border-left-color: #f39c12;">
+                        <h3 style="color: #6b5b0f;">🔧 ~/.zshrc.d/functions.sh への追加</h3>
+                        <p style="color: #2d3748; margin-bottom: 0.75rem;">以下のコマンドを実行すると関数が登録されます:</p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">cat &gt;&gt; ~/.zshrc.d/functions.sh &lt;&lt; 'FUNCEOF'
+
+# 書類画像の傾き補正（回転＋せん断の2段階補正、HEIC/PNG/JPG/JPEGに対応・大文字小文字不問）
+# HEICは一時的にPNGへ変換して補正し、補正後は元HEICの拡張子ではなくPNGとして出力する
+dskw() {
+  emulate -L zsh
+  setopt local_options nullglob nocaseglob
+
+  if (( $# &gt; 0 )); then
+    print -u2 "エラー: dskwは引数を取りません。"
+    print -u2 "使い方: 対象フォルダ内で dskw と入力してください"
+    return 1
+  fi
+
+  if ! python3 -c "import cv2, numpy" &gt;/dev/null 2&gt;&amp;1; then
+    print -u2 "エラー: 必要なPythonライブラリが見つかりません。"
+    print -u2 "以下を一度だけ実行してから再度お試しください："
+    print -u2 "  pip3 install opencv-python numpy --break-system-packages"
+    return 1
+  fi
+
+  local script="$HOME/bin/deskew.py"
+  if [[ ! -f "$script" ]]; then
+    print -u2 "エラー: 補正スクリプトが見つかりません: $script"
+    return 1
+  fi
+
+  local -a files
+  files=(*.heic *.png *.jpg *.jpeg)
+
+  if (( ${#files[@]} == 0 )); then
+    print -u2 "対象ファイル（heic / png / jpg / jpeg）が見つかりませんでした。"
+    return 1
+  fi
+
+  local f ext base tmppng target rc fail_count=0
+  for f in "${files[@]}"; do
+    ext="${f:e:l}"
+    base="${f:r}"
+
+    if [[ "$ext" == "heic" ]]; then
+      tmppng="${base}_tmp.png"
+      sips -s format png "$f" --out "$tmppng" &gt;/dev/null 2&gt;&amp;1
+      if [[ ! -f "$tmppng" ]]; then
+        print -u2 "変換失敗（sips）: $f"
+        (( fail_count++ ))
+        continue
+      fi
+      target="${base}_corrected.png"
+      python3 "$script" "$tmppng" "$target"
+      rc=$?
+      rm -f "$tmppng"
+    else
+      target="${base}_corrected.${ext}"
+      python3 "$script" "$f" "$target"
+      rc=$?
+    fi
+
+    if (( rc != 0 )); then
+      print -u2 "補正失敗: $f"
+      (( fail_count++ ))
+    fi
+  done
+
+  print --
+  if (( fail_count &gt; 0 )); then
+    print -- "完了（一部失敗あり: ${fail_count}件）"
+  else
+    print -- "全ファイルの補正が完了しました。"
+  fi
+}
+FUNCEOF
+source ~/.zshrc</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚠️ 実装時につまずいた点</h3>
+                    <div class="info-box" style="background-color: #fed7d7; border-left-color: #c53030;">
+                        <h4 style="color: #742a2a; margin-bottom: 0.5rem;">1. OpenCV のバージョン差で HoughLinesP の返り値の形が変わる</h4>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>症状</strong>: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">for line in lines: x1, y1, x2, y2 = line[0]</code> と書くと、環境によっては <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">TypeError: cannot unpack non-iterable numpy.int32 object</code> になる。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>対処</strong>: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">lines = lines.reshape(-1, 4)</code> で形状を揃えてから <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">for x1, y1, x2, y2 in lines:</code> と回す。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>注記</strong>: 現行版は HoughLinesP を使わないため発生しないが、同種のツールで再発しやすい。</p>
+                        <h4 style="color: #742a2a; margin-bottom: 0.5rem; margin-top: 1.25rem;">2. zsh の status は予約変数</h4>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>症状</strong>: ローカル変数名に <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">status</code> を使うと <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">read-only variable: status</code> エラーになる。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>原因</strong>: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">status</code> は <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">$?</code> の別名として zsh が予約しているため。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>対処</strong>: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">rc</code> などの別名に変える。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>注記</strong>: bash では予約されていないので、bash由来のコードを持ち込むと出やすい。</p>
+                        <h4 style="color: #742a2a; margin-bottom: 0.5rem; margin-top: 1.25rem;">3. せん断角は必ず回転補正「後」の画像で測り直す</h4>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>症状</strong>: 補正後の残存せん断角が、検出した回転角とほぼ同じ値になる。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>原因</strong>: 回転補正前に測ったせん断角を、回転補正後の画像に適用していた。画像を回転させると縦罫線の角度も回転角の分だけずれるため、ずれ量がちょうど回転角に一致する。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>対処</strong>: 回転補正を適用したあと、せん断角を測り直してから適用する。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>注記</strong>: 回転がほぼ0のファイルでは症状が出ないため、回転角が有意なファイルを必ずテストに含める。</p>
+                        <h4 style="color: #742a2a; margin-bottom: 0.5rem; margin-top: 1.25rem;">4. 回転補正の符号</h4>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>症状</strong>: 補正後の残存回転角が、検出値のちょうど2倍になる。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>原因</strong>: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">rotate_full(img, -rot)</code> と符号を反転させていた。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">cv2.getRotationMatrix2D</code> は正の角度で反時計回りに回転させるが、検出側は画像座標系（y軸が下向き）で角度を返すため符号反転は不要。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>対処</strong>: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">rotate_full(img, rot)</code> とする。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>注記</strong>: 「ちょうど2倍」は符号ミスの典型的なサイン。</p>
+                        <h4 style="color: #742a2a; margin-bottom: 0.5rem; margin-top: 1.25rem;">5. Hough変換の線分ごとの角度平均では精度が出ない（設計上の教訓）</h4>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>症状</strong>: 線は十分な本数検出できているのに、補正しても歪みが半分程度しか減らない。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>原因</strong>: HoughLinesP は1本の物理的な罫線を複数の短い線分に分断して返す。線分ごとに端点のピクセル誤差で角度が変わり、同じ罫線から 0.417 / 0.782 / 0.561 / 0.908 度といったばらつきが生じる。500px の線分では端点1ピクセルのずれが 0.11度の誤差になる。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>対処</strong>: 投影プロファイル法に切り替える。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>注記</strong>: この症状は「台形歪みではないか」と誤診しやすい。実際に垂直線の角度とx座標の相関を測ったところ相関係数は -0.13〜-0.22 と弱く、遠近歪みではなく測定精度の問題だと判明した。原因を推定する前に、角度と位置の相関を測って切り分けるのが確実。</p>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚠️ 既知の制約</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>罫線がしっかり入った表形式の書類を前提としたロジックです。罫線が薄い／少ない書類では検出精度が落ちます</li>
+                        <li>HEIC は OpenCV で直接読めないため sips での変換工程が必須です（関数内で自動処理）</li>
+                        <li>出力ファイル名は英数字（ASCII）で統一しています</li>
+                        <li>角度探索は総当たりのため、1枚あたり数秒かかります</li>
+                        <li>補正できるのは回転とせん断（アフィン変換の範囲）までです。原稿の浮きや撮影角度による遠近歪み（台形歪み）は補正できません。その場合は射影変換が必要になります</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔧 トラブルシューティング</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem; color: #2d3748;">
+                        <tr style="background-color: #edf2f7;">
+                            <th style="padding: 0.5rem; text-align: left; border: 1px solid #cbd5e0;">症状</th>
+                            <th style="padding: 0.5rem; text-align: left; border: 1px solid #cbd5e0;">原因・対処</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">「エラー: dskwは引数を取りません。」</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">引数を付けずに <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">dskw</code> とだけ入力する</td>
+                        </tr>
+                        <tr style="background-color: #f7fafc;">
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">「必要なPythonライブラリが見つかりません」</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">上記の pip3 のインストールコマンドを一度実行する</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">「補正スクリプトが見つかりません」</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">上記の手順で <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">~/bin/deskew.py</code> を配置する</td>
+                        </tr>
+                        <tr style="background-color: #f7fafc;">
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">「対象ファイルが見つかりませんでした」</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">フォルダに heic / png / jpg / jpeg の画像がない</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">「警告: 罫線を検出できませんでした」</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">罫線が薄い／存在しない書類。原本の解像度・コントラストを確認する</td>
+                        </tr>
+                        <tr style="background-color: #f7fafc;">
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">変換失敗（sips）</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">HEICファイル自体が破損している可能性。Finderで開けるか確認する</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">検出画素数が極端に少ない（数千以下）</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">罫線抽出が効いていない</td>
+                        </tr>
+                        <tr style="background-color: #f7fafc;">
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">残存せん断角が回転角とほぼ同値</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">回転補正後の測り直しが抜けている（現行版では修正済み）</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">残存角度が検出値のちょうど2倍</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">補正の符号ミス（現行版では修正済み）</td>
+                        </tr>
+                        <tr style="background-color: #f7fafc;">
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">補正しても歪みが半分程度しか減らない</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">測定精度の問題（現行版では投影プロファイル法に変更済み）</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">補正後も罫線が左右で逆向きに傾く</td>
+                            <td style="padding: 0.5rem; border: 1px solid #cbd5e0;">遠近歪みの可能性。アフィン変換では補正できない</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <!-- pmetaエイリアス詳細モーダル -->
         <div id="pmetaModal" class="modal" onclick="closeModal(event)">
             <div class="modal-content" onclick="event.stopPropagation()">
@@ -4069,6 +4516,7 @@ source ~/.zshrc</pre>
 
         // タブ切り替え制御
         const SUBITEM_TO_TAB = {
+            dskw: 'image-conversion',
             spgs: 'pdf-processing',
             gz2p: 'pdf-processing',
             pmeta: 'pdf-processing',
