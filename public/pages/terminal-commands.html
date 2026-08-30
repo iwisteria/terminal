@@ -454,7 +454,7 @@
         <div class="header">
             <h1>ターミナルコマンド集</h1>
             <p>よく使うコマンドとエイリアスのリファレンス</p>
-            <div class="last-update">更新: 2026-08-08</div>
+            <div class="last-update">更新: 2026-08-31</div>
         </div>
 
         <!-- エイリアス一覧 -->
@@ -483,6 +483,7 @@
                         <li><a href="#image-conversion">画像変換</a>
                         <ul>
                             <li><a href="#dskw">dskw — 書類画像の傾き補正</a></li>
+                            <li><a href="#hcrz">hcrz — HEIC画像の縦横リサイズ</a></li>
                         </ul>
                         </li>
                         <li><a href="#file-operations">ファイル操作</a></li>
@@ -702,6 +703,16 @@
                     <pre class="command-code">dskw</pre>
                 </div>
                 <button class="shortcut-button" onclick="openModal('dskwModal')" style="margin-top: 1rem;">📖 関数の詳細を見る</button>
+            </div>
+
+            <div class="command-item" id="hcrz">
+                <div class="command-title">HEIC画像の縦横リサイズ（hcrz）</div>
+                <div class="command-desc">HEIC画像の幅または高さを指定して、アスペクト比を維持したままリサイズします（対話形式）。</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">hcrz</pre>
+                </div>
+                <button class="shortcut-button" onclick="openModal('hcrzModal')" style="margin-top: 1rem;">📖 関数の詳細を見る</button>
             </div>
 
             </div>
@@ -4227,6 +4238,169 @@ source ~/.zshrc</pre>
             </div>
         </div>
 
+        <!-- hcrz関数詳細モーダル -->
+        <div id="hcrzModal" class="modal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🖼️ hcrz関数の詳細</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="info-box">
+                        <h3>実行コマンド</h3>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">hcrz</pre>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
+                    <p style="color: #718096; margin-bottom: 1rem;">HEIC画像の幅または高さのどちらかをピクセル数で指定し、アスペクト比を維持したままリサイズします。画質・圧縮設定は変更しません。対象はカレントディレクトリの <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">*.heic</code> ファイルです（大文字小文字は区別しません）。</p>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
+                    <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
+                        <p style="color: #2d3748; margin-bottom: 0.75rem;">対象フォルダで <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">hcrz</code> と入力（引数なし）。実行すると次の順で対話式に進みます。</p>
+                        <ol style="margin-left: 1.5rem; color: #2d3748;">
+                            <li>幅／高さの番号選択（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">1</code>：幅、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">2</code>：高さ）</li>
+                            <li>ピクセル数の入力</li>
+                            <li>対象ファイル数・指定内容・出力先を表示したうえで実行確認（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">y/n</code>）</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 処理内容</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">sips --resampleWidth</code> / <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">sips --resampleHeight</code> でリサイズ（アスペクト比は自動維持）</li>
+                        <li>出力は新規フォルダ（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">resized_w{値}px</code> または <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">resized_h{値}px</code>）に格納</li>
+                        <li>元ファイルは変更しない</li>
+                        <li>同名フォルダが既にある場合は警告して中止（上書きしない）</li>
+                        <li>必要ツール: sips（macOS 標準搭載、追加インストール不要）</li>
+                    </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 関数の登録コマンド</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">cat &gt;&gt; ~/.zshrc.d/functions.sh &lt;&lt; 'FUNCEOF'
+
+# HEIC画像の一括リサイズ（対話形式：幅/高さを番号選択→数値入力→実行確認→リサイズ）
+# アスペクト比は自動維持。出力は新規フォルダ（resized_w幅px または resized_h高さpx）に格納し、元ファイルは変更しない
+hcrz() {
+  emulate -L zsh
+  setopt local_options nullglob nocaseglob
+
+  if (( $# &gt; 0 )); then
+    print -u2 "エラー: hcrzは引数を取りません。実行すると対話形式で幅・高さを指定できます。"
+    return 1
+  fi
+
+  local -a files
+  files=(*.heic)
+
+  if (( ${#files[@]} == 0 )); then
+    print -u2 "対象ファイル（.heic）が見つかりませんでした。"
+    return 1
+  fi
+
+  print -- "1: 幅を指定"
+  print -- "2: 高さを指定"
+  local choice
+  read "choice?番号を選択してください (1/2): "
+
+  local opt
+  case "$choice" in
+    1) opt="-w" ;;
+    2) opt="-h" ;;
+    *)
+      print -u2 "エラー: 1 または 2 を入力してください。"
+      return 1
+      ;;
+  esac
+
+  local val
+  read "val?ピクセル数を入力してください: "
+
+  if [[ ! "$val" =~ ^[0-9]+$ ]]; then
+    print -u2 "エラー: ピクセル数は数値で指定してください"
+    return 1
+  fi
+
+  local outdir
+  if [[ "$opt" == "-w" ]]; then
+    outdir="resized_w${val}px"
+  else
+    outdir="resized_h${val}px"
+  fi
+
+  if [[ -e "$outdir" ]]; then
+    print -u2 "警告: '${outdir}' は既に存在します。上書きを避けるため処理を中止しました。"
+    return 1
+  fi
+
+  print --
+  print -- "対象ファイル数: ${#files[@]} 件"
+  if [[ "$opt" == "-w" ]]; then
+    print -- "指定: 幅 ${val}px（高さはアスペクト比に応じて自動計算）"
+  else
+    print -- "指定: 高さ ${val}px（幅はアスペクト比に応じて自動計算）"
+  fi
+  print -- "出力先: ${PWD}/${outdir}"
+
+  local confirm
+  read "confirm?この内容で実行しますか？ (y/n): "
+  if [[ "$confirm" != "y" &amp;&amp; "$confirm" != "Y" ]]; then
+    print -- "中止しました。"
+    return 1
+  fi
+
+  mkdir "$outdir" || {
+    print -u2 "出力フォルダの作成に失敗しました。"
+    return 1
+  }
+
+  local f rc ok_count=0 fail_count=0
+  for f in "${files[@]}"; do
+    if [[ "$opt" == "-w" ]]; then
+      sips --resampleWidth "$val" "$f" --out "$outdir/$f" &gt;/dev/null 2&gt;&amp;1
+    else
+      sips --resampleHeight "$val" "$f" --out "$outdir/$f" &gt;/dev/null 2&gt;&amp;1
+    fi
+    rc=$?
+    if (( rc == 0 )); then
+      (( ok_count++ ))
+    else
+      print -u2 "失敗: $f"
+      (( fail_count++ ))
+    fi
+  done
+
+  print --
+  print -- "出力先: ${PWD}/${outdir}"
+  if (( fail_count &gt; 0 )); then
+    print -- "完了（成功 ${ok_count}件 / 失敗 ${fail_count}件）"
+  else
+    print -- "全ファイルのリサイズが完了しました（${ok_count}件）"
+  fi
+}
+FUNCEOF
+source ~/.zshrc</pre>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚠️ 実装時につまずいた点</h3>
+                    <div class="info-box" style="background-color: #fed7d7; border-left-color: #c53030;">
+                        <h4 style="color: #742a2a; margin-bottom: 0.5rem;">1. 入れ子の中かっこを関数の終わりと誤認識した</h4>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>症状</strong>: 既存関数を新しい対話形式の実装に置き換える際、関数内部の <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">mkdir ... || { ... }</code> のような入れ子の中かっこを関数の終わりと誤認識し、削除範囲が途中で止まる事象が発生した。</p>
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>対処</strong>: 置き換え後は <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">zsh -n</code> での構文チェックを行う。</p>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚠️ 既知の制約</h3>
+                    <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>対応拡張子は heic のみ（png / jpg / jpeg 等は非対応）</li>
+                        <li>引数を渡すとエラーになる（対話形式専用）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
         <!-- pmetaエイリアス詳細モーダル -->
         <div id="pmetaModal" class="modal" onclick="closeModal(event)">
             <div class="modal-content" onclick="event.stopPropagation()">
@@ -4517,6 +4691,7 @@ source ~/.zshrc</pre>
         // タブ切り替え制御
         const SUBITEM_TO_TAB = {
             dskw: 'image-conversion',
+            hcrz: 'image-conversion',
             spgs: 'pdf-processing',
             gz2p: 'pdf-processing',
             pmeta: 'pdf-processing',
