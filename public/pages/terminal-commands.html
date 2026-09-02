@@ -832,24 +832,37 @@
 
             <div class="command-item">
                 <div class="command-title">zp</div>
-                <div class="command-desc">カレントディレクトリ自体をCP932（Windows互換）でZIP化します</div>
+                <div class="command-desc">顧客送付用。カレントディレクトリ自体を、フォルダ構造を維持したままWindows対応ZIP（UTF-8＋言語エンコーディングフラグ方式）に変換します</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                     <pre class="command-code">zp</pre>
                 </div>
-                <div class="alias-tag">使用方法: カレントディレクトリ自体を CP932 でZIP化（ZIPは親ディレクトリに作成）</div>
-                <button class="shortcut-button" onclick="openModal('dir2zipCp932Modal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
+                <div class="alias-tag">使用方法: カレントディレクトリ自体をZIP化（フォルダ構造は維持／ZIPは親ディレクトリに作成）。内部関数は zputf8</div>
+                <button class="shortcut-button" onclick="openModal('zpModal')" style="margin-top: 1rem;">📖 エイリアスの詳細を見る</button>
             </div>
 
             <div class="info-box" style="margin-top: 1.5rem; background-color: #fffaf0; border-left-color: #ed8936;">
-                <h3 style="color: #7c2d12;">💡 CP932エンコーディングについて</h3>
-                <p style="color: #2d3748; margin-bottom: 0.5rem;">Python の zipfile モジュールを使用してCP932（Shift JIS）エンコーディングで ZIP ファイルを作成します。</p>
+                <h3 style="color: #7c2d12;">💡 文字エンコード方式について（UTF-8＋言語エンコーディングフラグ）</h3>
+                <p style="color: #2d3748; margin-bottom: 0.5rem;">ZIPフォーマットをPythonで直接バイナリ書き出しし、ファイル名を <strong>UTF-8</strong> で格納したうえで general purpose bit flag の <strong>bit 11（0x800）</strong> を立てます（ローカルヘッダ・セントラルディレクトリ両方）。これにより解凍側へ「ファイル名はUTF-8」と明示され、Windowsでも日本語名が文字化けしません。</p>
                 <p style="color: #2d3748; margin-bottom: 0.5rem;"><strong>特徴:</strong></p>
                 <ul style="margin-left: 1.5rem; color: #2d3748;">
-                    <li>✅ Windows Explorer で日本語ファイル名が正常に表示</li>
-                    <li>✅ 日本語フォルダ名にも対応</li>
-                    <li>✅ 元のフォルダ構造を保持</li>
-                    <li>✅ 特殊文字（㈱、①②③など）にも対応</li>
+                    <li>✅ Windows でも日本語ファイル名・フォルダ名が正常に表示（bit 11 対応の解凍ソフトの場合）</li>
+                    <li>✅ 元のフォルダ構造をそのまま維持（対象フォルダごとZIP化）</li>
+                    <li>✅ <code>.DS_Store</code> 等のドットファイル・ドットディレクトリを自動除外（<code>.git</code> 等は走査自体をスキップ）</li>
+                    <li>✅ 完了後に <code>bsdtar -tvf</code> でZIP内容を一覧表示</li>
+                    <li>✅ 例外発生時は書きかけのZIPを削除してから終了</li>
+                    <li>✅ 親ディレクトリに同名ZIPが既にある場合はスキップ（上書きしない）</li>
+                </ul>
+                <p style="color: #2d3748; margin-top: 0.75rem; margin-bottom: 0.5rem;"><strong>旧方式（CP932／Shift-JIS）からの変更理由:</strong></p>
+                <p style="color: #2d3748;">以前は内部関数 <code>zpcp932</code> がファイル名をCP932で書き込んでいましたが、Shift-JISでは「表・十・申・能・予・貼・構」等の漢字の2バイト目が <code>0x5C</code>（バックスラッシュ）と衝突し、解凍時にパス区切りと誤解されて<strong>文字化けや意図しないフォルダ分裂</strong>が起きる欠陥がありました。UTF-8＋bit 11 方式ではこの 0x5C 問題が原理的に発生しません。呼び出し名 <code>zp</code> に変更はありません（内部関数名を <code>zpcp932</code> → <code>zputf8</code> に変更）。</p>
+            </div>
+
+            <div class="info-box" style="margin-top: 1rem; background-color: #ebf8ff; border-left-color: #4299e1;">
+                <h3 style="color: #2c5282;">🔀 zp と egzp の使い分け</h3>
+                <p style="color: #2d3748; margin-bottom: 0.5rem;">どちらもUTF-8＋bit 11 方式でZIP化し、<code>.DS_Store</code> 等のドットファイルを除外しますが、フォルダ構造の扱いが逆です。</p>
+                <ul style="margin-left: 1.5rem; color: #2d3748;">
+                    <li><strong>zp（内部関数 zputf8・顧客送付用・フォルダ構造を維持）</strong>：対象フォルダごとZIP化。出力先は親ディレクトリ（<code>../フォルダ名.zip</code>）。顧客へのメール添付・ファイル送付向け。</li>
+                    <li><strong>egzp（e-Gov用・フォルダを平坦化）</strong>：フォルダを作らずファイルのみをZIP直下に格納し、同名衝突は <code>_2, _3…</code> で連番リネーム。出力先はカレントディレクトリ。e-Gov電子申請はフォルダ階層があるとエラーになるため。</li>
                 </ul>
             </div>
 
@@ -2382,7 +2395,7 @@ Resized: output/photo3.heic</pre>
         </div>
 
         <!-- zpエイリアス詳細モーダル -->
-        <div id="dir2zipCp932Modal" class="modal" onclick="closeModal(event)">
+        <div id="zpModal" class="modal" onclick="closeModal(event)">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <div class="modal-header">
                     <h2>📦 zpエイリアスの詳細</h2>
@@ -2396,37 +2409,60 @@ Resized: output/photo3.heic</pre>
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                             <pre class="command-code">zp</pre>
                         </div>
+                        <p style="color: #718096; margin-top: 0.75rem;">呼び出し名は <code>zp</code>。<code>~/.zshrc</code> に <code>alias zp=zputf8</code> として登録されており、内部関数 <code>zputf8()</code>（<code>~/.zshrc.d/functions.sh</code>）を実行します。以前の内部関数名 <code>zpcp932</code> から <code>zputf8</code> に変更されましたが、呼び出し方法（<code>zp</code> のみ）に変更はありません。</p>
                     </div>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
-                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリ自体を1つのZIPファイルにまとめます。ZIPファイルは親ディレクトリに作成されます。</p>
+                    <p style="color: #718096; margin-bottom: 1rem;">顧客へ複数ファイルをまとめて送付するとき用に、カレントディレクトリ自体を、フォルダ構造を維持したまま1つのZIPファイルにまとめます。ZIPファイルは親ディレクトリに「カレントフォルダ名.zip」として作成されます。macOS標準のZIPではWindows側で日本語ファイル名が文字化けするため、ZIPフォーマットを直接バイナリ書き出しし、ファイル名を UTF-8 で格納したうえで言語エンコーディングフラグ（bit 11 / 0x800）を立てる方式を採っています。</p>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
                     <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
                         <ol style="margin-left: 1.5rem; color: #2d3748;">
                             <li>ZIP化したいディレクトリに移動（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">cd</code> コマンドで対象ディレクトリへ）</li>
                             <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">zp</code>コマンドを実行</li>
-                            <li>カレントディレクトリと同名のZIPファイルが親ディレクトリに作成されます</li>
+                            <li>カレントディレクトリと同名のZIPファイルが親ディレクトリに作成され、完了後にZIP内容が一覧表示されます</li>
                         </ol>
                     </div>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 処理内容</h3>
                     <ul style="margin-left: 1.5rem; color: #2d3748;">
-                        <li>処理対象: カレントディレクトリ全体</li>
-                        <li>エンコーディング: CP932（Windows互換）</li>
+                        <li>処理対象: カレントディレクトリ全体（<code>os.walk</code> で配下を再帰的に収集、フォルダ構造は維持）</li>
+                        <li>文字エンコード: ファイル名を UTF-8（NFC正規化）で格納し、言語エンコーディングフラグ bit 11（0x800）をローカルヘッダ・セントラルディレクトリ両方にセット</li>
+                        <li>除外対象: <code>.DS_Store</code> 等のドットファイル・ドットディレクトリ（<code>dirs[:]</code> の書き換えで <code>.git</code> 等は <code>os.walk</code> の走査対象からも除外）</li>
                         <li>出力先: 親ディレクトリ（カレントディレクトリ名.zip）</li>
-                        <li>既にZIPが存在する場合はスキップ</li>
+                        <li>既に同名ZIPが存在する場合はスキップ（<code>return 1</code>、上書きしない）</li>
+                        <li>例外発生時: 書きかけのZIPファイルを削除してから終了</li>
+                        <li>完了後: <code>bsdtar -tvf</code> でZIP内容を一覧表示（macOS標準の <code>unzip</code> はUTF-8名を正しく扱えず文字化けするため）</li>
                     </ul>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔀 egzp との違い</h3>
+                    <div class="info-box" style="background-color: #ebf8ff; border-left-color: #4299e1;">
+                        <ul style="margin-left: 1.5rem; color: #2d3748;">
+                            <li><strong>zp（内部関数 zputf8・顧客送付用・フォルダ構造を維持）</strong>：対象フォルダごとZIP化。出力先は親ディレクトリ（<code>../フォルダ名.zip</code>）。顧客へのメール添付・ファイル送付向け。</li>
+                            <li><strong>egzp（e-Gov用・フォルダを平坦化）</strong>：フォルダを作らずファイルのみをZIP直下に格納し、同名衝突は <code>_2, _3…</code> で連番リネーム。出力先はカレントディレクトリ。e-Gov電子申請はフォルダ階層があるとエラーになるため。</li>
+                        </ul>
+                        <p style="color: #2d3748; margin-top: 0.5rem;">文字エンコード方式（UTF-8＋bit 11）と <code>.DS_Store</code> 等の除外は両者で共通です。</p>
+                    </div>
+
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚠️ 旧 zpcp932（CP932／Shift-JIS）方式の既知の欠陥</h3>
+                    <div class="info-box" style="background-color: #fff5f5; border-left-color: #f56565;">
+                        <p style="color: #2d3748; margin-bottom: 0.5rem;">以前の内部関数 <code>zpcp932</code> はファイル名をCP932で書き込み、UTF-8フラグを立てない方式でした。しかしShift-JISでは「表・十・申・能・予・貼・構」等の漢字の2バイト目が <code>0x5C</code>（バックスラッシュ）と衝突し、解凍時にパス区切りと誤解されて<strong>文字化け・意図しないフォルダ分裂</strong>が発生する欠陥がありました。</p>
+                        <p style="color: #2d3748;">現行の <code>zputf8</code>（UTF-8＋bit 11）ではこの 0x5C 問題が原理的に発生しません。あわせて、ドットファイル除外・エラー時のZIP削除・<code>bsdtar -tvf</code> による内容確認を追加しています。呼び出し名 <code>zp</code> は変更ありません。</p>
+                    </div>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
                     <div class="code-wrapper" style="margin-top: 0.75rem;">
                         <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                        <pre class="command-code">zp() {
+                        <pre class="command-code"># ~/.zshrc
+alias zp=zputf8
+
+# ~/.zshrc.d/functions.sh
+# カレントディレクトリ自体をWindows対応ZIPに変換（UTF-8 + 言語エンコーディングフラグ方式）
+zputf8() {
   local dirname=$(basename "$PWD")
   local zipname="${dirname}.zip"
   local zip_path="$(dirname "$PWD")/$zipname"
 
-  # 既にZIPが存在する場合はスキップ
   if [ -f "$zip_path" ]; then
     echo "⊘ スキップ: $dirname (既にZIPが存在します: $zip_path)"
     return 1
@@ -2434,9 +2470,8 @@ Resized: output/photo3.heic</pre>
 
   echo "処理中: $dirname → $zip_path"
 
-  # ZIPフォーマットをバイナリで直接書き出す（UTF-8フラグ強制セットを回避）
   python3 << PYTHON_EOF
-import os, sys, struct, zlib, time
+import os, sys, struct, zlib, time, unicodedata
 
 try:
     folder_path = "$PWD"
@@ -2447,16 +2482,19 @@ try:
 
     with open(zip_path, 'wb') as zf:
         for root, dirs, files in os.walk(folder_path):
+            dirs[:] = [d for d in dirs if not d.startswith('.')]
             dirs.sort()
             for file in sorted(files):
+                if file.startswith('.'):
+                    continue
                 file_path = os.path.join(root, file)
                 arcname = os.path.relpath(file_path, parent_path)
-                arcname_bytes = arcname.encode('cp932')
+                arcname_bytes = unicodedata.normalize('NFC', arcname).encode('utf-8')
 
                 with open(file_path, 'rb') as f:
                     data = f.read()
 
-                compressed = zlib.compress(data, 6)[2:-4]  # deflate
+                compressed = zlib.compress(data, 6)[2:-4]
                 crc = zlib.crc32(data) & 0xFFFFFFFF
                 t = time.localtime()
                 dostime = (t.tm_hour << 11) | (t.tm_min << 5) | (t.tm_sec // 2)
@@ -2464,18 +2502,17 @@ try:
 
                 offset = zf.tell()
 
-                # Local file header
                 lh = struct.pack('<4sHHHHHIIIHH',
                     b'PK\x03\x04',
-                    20,          # version needed
-                    0,           # flags: 0 (no UTF-8 flag)
-                    8,           # compression: deflate
+                    20,
+                    0x800,
+                    8,
                     dostime, dosdate,
                     crc,
                     len(compressed),
                     len(data),
                     len(arcname_bytes),
-                    0            # extra field length
+                    0
                 )
                 zf.write(lh)
                 zf.write(arcname_bytes)
@@ -2483,28 +2520,26 @@ try:
 
                 entries.append((arcname_bytes, crc, len(compressed), len(data), dostime, dosdate, offset))
 
-        # Central directory
         cd_offset = zf.tell()
         for arcname_bytes, crc, comp_size, uncomp_size, dostime, dosdate, offset in entries:
             cd = struct.pack('<4sHHHHHHIIIHHHHHII',
                 b'PK\x01\x02',
-                20,          # version made by
-                20,          # version needed
-                0,           # flags: 0
-                8,           # compression
+                20,
+                20,
+                0x800,
+                8,
                 dostime, dosdate,
                 crc,
                 comp_size,
                 uncomp_size,
                 len(arcname_bytes),
-                0, 0, 0, 0,  # extra, comment, disk, attr
-                0,           # external attr
+                0, 0, 0, 0,
+                0,
                 offset
             )
             zf.write(cd)
             zf.write(arcname_bytes)
 
-        # End of central directory
         cd_size = zf.tell() - cd_offset
         eocd = struct.pack('<4sHHHHIIH',
             b'PK\x05\x06',
@@ -2518,11 +2553,17 @@ try:
     sys.exit(0)
 except Exception as e:
     print(f"✗ エラー: {e}")
+    try:
+        os.remove(zip_path)
+    except OSError:
+        pass
     sys.exit(1)
 PYTHON_EOF
 
   if [ $? -eq 0 ]; then
     echo "✓ 完了: $zip_path"
+    echo "----- ZIP内容 -----"
+    bsdtar -tvf "$zip_path"
   else
     echo "✗ エラー: $dirname の変換に失敗しました"
   fi
