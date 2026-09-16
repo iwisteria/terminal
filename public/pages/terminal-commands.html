@@ -887,7 +887,7 @@
 
             <div class="command-item">
                 <div class="command-title">pdf2webp</div>
-                <div class="command-desc">カレントディレクトリのPDFをWebp画像に変換（圧縮努力度6、品質50）</div>
+                <div class="command-desc">カレントディレクトリのPDFをページごとにWebP画像に変換（複数ページ対応、圧縮努力度6、品質50）</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                     <pre class="command-code">pdf2webp</pre>
@@ -2625,17 +2625,17 @@ PYTHON_EOF
             </div>
         </div>
 
-        <!-- pdf2webpエイリアス詳細モーダル -->
+        <!-- pdf2webp関数詳細モーダル -->
         <div id="pdf2webpModal" class="modal" onclick="closeModal(event)">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <div class="modal-header">
-                    <h2>📄 pdf2webpエイリアスの詳細</h2>
+                    <h2>📄 pdf2webp関数の詳細</h2>
                     <button class="modal-close" onclick="closeModal()">&times;</button>
                 </div>
 
                 <div class="modal-body">
                     <div class="info-box">
-                        <h3>エイリアスコマンド</h3>
+                        <h3>コマンド</h3>
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                             <pre class="command-code">pdf2webp</pre>
@@ -2643,29 +2643,57 @@ PYTHON_EOF
                     </div>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
-                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリのPDFファイルを300dpi解像度でWebP画像に変換します。高品質の圧縮と最高レベルの圧縮方法で、ウェブに最適化された画像を生成します。</p>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリのPDFファイルをページ単位で300dpi解像度のPNGに書き出し、cwebpでWebP画像に変換します。ページごとに個別処理するため、複数ページのPDFでも各ページが正しく独立した画像として出力されます。</p>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
                     <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
                         <ol style="margin-left: 1.5rem; color: #2d3748;">
                             <li>カレントディレクトリのPDFを配置</li>
                             <li>ターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">pdf2webp</code>コマンドを実行</li>
-                            <li>各PDFページがWebP画像になって同じフォルダに出力されます</li>
+                            <li>各PDFページが<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">元ファイル名_0001.webp</code>等の形式で同じフォルダに出力されます</li>
                         </ol>
                     </div>
 
-                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 変換設定</h3>
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 処理内容</h3>
                     <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>入力形式: PDF（複数ページ対応）</li>
                         <li>解像度: 300dpi (高解像度)</li>
+                        <li>幅リサイズ: 最大1200px</li>
                         <li>品質: quality=50</li>
                         <li>圧縮方法: method=6 (最高品質)</li>
                         <li>出力形式: WebP</li>
+                        <li>出力ファイル名: <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">元ファイル名_0001.webp</code>（ページ番号付き）</li>
+                        <li>必要ツール: ImageMagick（magick）、cwebp</li>
                     </ul>
 
-                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 元のコード</h3>
-                    <div class="code-wrapper" style="margin-top: 0.75rem;">
-                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                        <pre class="command-code">pdf2webp='for file in *.pdf; do convert -density 300 -colorspace sRGB -background white -flatten "$file" /tmp/temp.png && cwebp -resize 1200 0 -q 50 -m 6 /tmp/temp.png -o "${file%.pdf}.webp" && rm /tmp/temp.png; done'</pre>
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 関数の設定（初回のみ）</h3>
+                    <div class="info-box" style="background-color: #fef5e7; border-left-color: #f39c12;">
+                        <h3 style="color: #6b5b0f;">🔧 ~/.zshrc への追加</h3>
+                        <p style="color: #2d3748; margin-bottom: 0.75rem;">以下のコマンドを実行すると関数が登録されます:</p>
+                        <div class="code-wrapper" style="margin-top: 0.75rem;">
+                            <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                            <pre class="command-code">cat >> ~/.zshrc << 'EOF'
+pdf2webp() {
+  setopt local_options nullglob
+  local tmpdir=$(mktemp -d)
+  for file in *.pdf *.PDF; do
+    [ -f "$file" ] || continue
+    local base="${file%.*}"
+    local pages=$(magick identify "$file" 2>/dev/null | wc -l)
+    local i=0
+    while [ "$i" -lt "$pages" ]; do
+      local idx=$(printf "%04d" $((i + 1)))
+      magick -density 300 -colorspace sRGB -background white "${file}[$i]" -flatten "$tmpdir/${base}_${idx}.png"
+      cwebp -resize 1200 0 -q 50 -m 6 "$tmpdir/${base}_${idx}.png" -o "${base}_${idx}.webp"
+      rm -f "$tmpdir/${base}_${idx}.png"
+      i=$((i + 1))
+    done
+  done
+  rmdir "$tmpdir" 2>/dev/null
+}
+EOF
+source ~/.zshrc</pre>
+                        </div>
                     </div>
                 </div>
             </div>
