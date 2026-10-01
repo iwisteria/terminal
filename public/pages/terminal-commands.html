@@ -667,7 +667,7 @@
 
             <div class="command-item">
                 <div class="command-title">jpg</div>
-                <div class="command-desc">カレントディレクトリの全画像ファイル（HEIC・PNG・GIF・TIFF・TIF・BMP・WebP）をJPEGに一括変換。元ファイルは残します（ImageMagick v7使用）</div>
+                <div class="command-desc">カレントディレクトリの全画像ファイル（HEIC・PNG・GIF・TIFF・TIF・BMP・WebP・AVIF）をJPEGに一括変換。元ファイルは残します（ImageMagick v7使用）</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                     <pre class="command-code">jpg</pre>
@@ -1637,7 +1637,7 @@ done</pre>
                     </div>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
-                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリ内の画像ファイル（HEIC・PNG・GIF・TIFF・TIF・BMP・WebP）をJPEG形式に一括変換します。元ファイルは削除せず、同名の .jpg ファイルを生成します。</p>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリ内の画像ファイル（HEIC・PNG・GIF・TIFF・TIF・BMP・WebP・AVIF）をJPEG形式に一括変換します。元ファイルは削除せず、同名の .jpg ファイルを生成します。</p>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
                     <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
@@ -1650,7 +1650,7 @@ done</pre>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 対応形式・特徴</h3>
                     <ul style="margin-left: 1.5rem; color: #2d3748;">
-                        <li>入力形式: HEIC / heic, PNG / png, GIF / gif, TIFF / tiff / TIF / tif, BMP / bmp, WebP / webp</li>
+                        <li>入力形式: HEIC / heic, PNG / png, GIF / gif, TIFF / tiff / TIF / tif, BMP / bmp, WebP / webp, AVIF / avif</li>
                         <li>出力形式: JPEG (.jpg)</li>
                         <li>元ファイルは削除しない（上書きなし）</li>
                         <li>NULL_GLOB で対象拡張子がない場合のエラーを回避</li>
@@ -1663,7 +1663,7 @@ done</pre>
                         <p style="color: #2d3748; margin-bottom: 0.75rem;">以下のコマンドを実行するとエイリアスが登録されます:</p>
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">echo 'alias jpg='"'"'setopt NULL_GLOB; for f in *.heic *.HEIC *.png *.PNG *.gif *.GIF *.tiff *.tif *.TIFF *.TIF *.bmp *.BMP *.webp *.WebP; do [ -f "$f" ] && magick "$f" "${f%.*}.jpg"; done; unsetopt NULL_GLOB'"'"'' >> ~/.zshrc && source ~/.zshrc</pre>
+                            <pre class="command-code">echo 'alias jpg='"'"'setopt NULL_GLOB; for f in *.heic *.HEIC *.png *.PNG *.gif *.GIF *.tiff *.tif *.TIFF *.TIF *.bmp *.BMP *.webp *.WebP *.avif *.AVIF; do [ -f "$f" ] && magick "$f" "${f%.*}.jpg"; done; unsetopt NULL_GLOB'"'"'' >> ~/.zshrc && source ~/.zshrc</pre>
                         </div>
                     </div>
                 </div>
