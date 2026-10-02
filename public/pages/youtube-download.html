@@ -231,7 +231,7 @@
         <div class="header">
             <h1>YouTube動画ダウンロード コマンド集</h1>
             <p>yt-dlp を使った YouTube ダウンロードコマンド集</p>
-            <div class="last-update">更新: 2025-12-05 09:50</div>
+            <div class="last-update">更新: 2026-10-02</div>
         </div>
 
         <div class="toc">
@@ -241,6 +241,7 @@
                 <li><a href="#video-download-h264">動画ダウンロード（H.264）</a></li>
                 <li><a href="#audio-extract">音声抽出</a></li>
                 <li><a href="#advanced">詳細・応用機能</a></li>
+                <li><a href="#troubleshooting">トラブルシューティング・更新</a></li>
             </ul>
         </div>
 
@@ -261,19 +262,19 @@
 
             <div class="command-item">
                 <div class="command-title">最高品質ダウンロード（クッキーなし - 公開動画向け）</div>
-                <div class="command-desc">公開されているYouTube動画を最高品質でダウンロードします。AV1優先、次点でH.264（mp4形式）で確実にダウンロード。</div>
+                <div class="command-desc">公開されているYouTube動画を最高品質でダウンロードします。AV1優先、無ければH.264、それも無ければ利用可能な最高画質を自動で選んでダウンロードし、mp4で保存します。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=h264][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1][ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best" --merge-output-format mp4 -o "%(title)s.%(ext)s" "URL"</pre>
                 </div>
             </div>
 
             <div class="command-item">
                 <div class="command-title">最高品質ダウンロード（Brave認証付き - 制限付き動画向け）</div>
-                <div class="command-desc">年齢制限やプライベート動画など認証が必要な動画をダウンロードします。Braveブラウザのクッキーを使用。AV1優先、次点でH.264（mp4形式）で確実にダウンロード。</div>
+                <div class="command-desc">年齢制限やプライベート動画など認証が必要な動画をダウンロードします。Braveブラウザのクッキーを使用。AV1優先、無ければH.264、それも無ければ利用可能な最高画質を自動で選んでダウンロードし、mp4で保存します。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp --remote-components ejs:github --cookies-from-browser brave -f "bestvideo[vcodec^=av01][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=h264][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                    <pre class="command-code">yt-dlp --remote-components ejs:github --cookies-from-browser brave -f "bestvideo[vcodec^=av01][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1][ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best" --merge-output-format mp4 -o "%(title)s.%(ext)s" "URL"</pre>
                 </div>
             </div>
 
@@ -285,19 +286,19 @@
 
             <div class="command-item">
                 <div class="command-title">HD1080p（クッキーなし - 公開動画向け）</div>
-                <div class="command-desc">1080p（フルHD）の品質でダウンロード。AV1優先、次点でH.264（mp4形式）で高品質と容量のバランスを実現。</div>
+                <div class="command-desc">1080p（フルHD）の品質でダウンロード。AV1優先、無ければH.264、それも無ければ利用可能な最高画質を自動で選んでダウンロードし、mp4で保存します。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01][height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=h264][height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01][height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1][height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=1080]+bestaudio/best[height<=1080]" --merge-output-format mp4 -o "%(title)s.%(ext)s" "URL"</pre>
                 </div>
             </div>
 
             <div class="command-item">
                 <div class="command-title">HD1080p（Brave認証付き - 制限付き動画向け）</div>
-                <div class="command-desc">1080p（フルHD）の品質でダウンロード。Braveブラウザのクッキーで認証対応。AV1優先、次点でH.264（mp4形式）で安定ダウンロード。</div>
+                <div class="command-desc">1080p（フルHD）の品質でダウンロード。Braveブラウザのクッキーで認証対応。AV1優先、無ければH.264、それも無ければ利用可能な最高画質を自動で選んでダウンロードし、mp4で保存します。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp --remote-components ejs:github --cookies-from-browser brave -f "bestvideo[vcodec^=av01][height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=h264][height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                    <pre class="command-code">yt-dlp --remote-components ejs:github --cookies-from-browser brave -f "bestvideo[vcodec^=av01][height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1][height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=1080]+bestaudio/best[height<=1080]" --merge-output-format mp4 -o "%(title)s.%(ext)s" "URL"</pre>
                 </div>
             </div>
 
@@ -309,19 +310,19 @@
 
             <div class="command-item">
                 <div class="command-title">SD720p（クッキーなし - 公開動画向け）</div>
-                <div class="command-desc">720p（HD）の品質でダウンロード。AV1優先、次点でH.264（mp4形式）でストレージ節約に最適。</div>
+                <div class="command-desc">720p（HD）の品質でダウンロード。AV1優先、無ければH.264、それも無ければ利用可能な最高画質を自動で選んでダウンロードし、mp4で保存します。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01][height<=720][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=h264][height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01][height<=720][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1][height<=720][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=720]+bestaudio/best[height<=720]" --merge-output-format mp4 -o "%(title)s.%(ext)s" "URL"</pre>
                 </div>
             </div>
 
             <div class="command-item">
                 <div class="command-title">SD720p（Brave認証付き - 制限付き動画向け）</div>
-                <div class="command-desc">720p（HD）の品質でダウンロード。Braveブラウザのクッキーで認証対応。AV1優先、次点でH.264（mp4形式）で確実ダウンロード。</div>
+                <div class="command-desc">720p（HD）の品質でダウンロード。Braveブラウザのクッキーで認証対応。AV1優先、無ければH.264、それも無ければ利用可能な最高画質を自動で選んでダウンロードし、mp4で保存します。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp --remote-components ejs:github --cookies-from-browser brave -f "bestvideo[vcodec^=av01][height<=720][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=h264][height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                    <pre class="command-code">yt-dlp --remote-components ejs:github --cookies-from-browser brave -f "bestvideo[vcodec^=av01][height<=720][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1][height<=720][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=720]+bestaudio/best[height<=720]" --merge-output-format mp4 -o "%(title)s.%(ext)s" "URL"</pre>
                 </div>
             </div>
         </div>
@@ -338,19 +339,19 @@
 
             <div class="command-item">
                 <div class="command-title">HD1080p（クッキーなし - 公開動画向け）</div>
-                <div class="command-desc">1080p（フルHD）の品質でダウンロード。H.264（mp4形式）で安定ダウンロード。</div>
+                <div class="command-desc">1080p（フルHD）の品質でダウンロード。H.264（mp4形式）で安定ダウンロード。H.264が提供されていない動画では失敗します（自動で別形式を選ぶ場合は「AV1優先」のコマンドを使用）。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=h264][height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=avc1][height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
                 </div>
             </div>
 
             <div class="command-item">
                 <div class="command-title">HD1080p（Brave認証付き - 制限付き動画向け）</div>
-                <div class="command-desc">1080p（フルHD）の品質でダウンロード。Braveブラウザのクッキーで認証対応。H.264（mp4形式）で安定ダウンロード。</div>
+                <div class="command-desc">1080p（フルHD）の品質でダウンロード。Braveブラウザのクッキーで認証対応。H.264（mp4形式）で安定ダウンロード。H.264が提供されていない動画では失敗します（自動で別形式を選ぶ場合は「AV1優先」のコマンドを使用）。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp --cookies-from-browser brave -f "bestvideo[vcodec^=h264][height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                    <pre class="command-code">yt-dlp --cookies-from-browser brave -f "bestvideo[vcodec^=avc1][height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
                 </div>
             </div>
 
@@ -362,19 +363,19 @@
 
             <div class="command-item">
                 <div class="command-title">SD720p（クッキーなし - 公開動画向け）</div>
-                <div class="command-desc">720p（HD）の品質でダウンロード。H.264（mp4形式）でストレージ節約に最適。</div>
+                <div class="command-desc">720p（HD）の品質でダウンロード。H.264（mp4形式）でストレージ節約に最適。H.264が提供されていない動画では失敗します（自動で別形式を選ぶ場合は「AV1優先」のコマンドを使用）。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=h264][height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=avc1][height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
                 </div>
             </div>
 
             <div class="command-item">
                 <div class="command-title">SD720p（Brave認証付き - 制限付き動画向け）</div>
-                <div class="command-desc">720p（HD）の品質でダウンロード。Braveブラウザのクッキーで認証対応。H.264（mp4形式）で確実ダウンロード。</div>
+                <div class="command-desc">720p（HD）の品質でダウンロード。Braveブラウザのクッキーで認証対応。H.264（mp4形式）で確実ダウンロード。H.264が提供されていない動画では失敗します（自動で別形式を選ぶ場合は「AV1優先」のコマンドを使用）。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp --cookies-from-browser brave -f "bestvideo[vcodec^=h264][height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                    <pre class="command-code">yt-dlp --cookies-from-browser brave -f "bestvideo[vcodec^=avc1][height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
                 </div>
             </div>
         </div>
@@ -413,10 +414,10 @@
 
             <div class="command-item">
                 <div class="command-title">カスタムファイル名で保存</div>
-                <div class="command-desc">デフォルトの YouTube タイトルではなく、カスタムファイル名で保存します。AV1優先、次点でH.264（mp4形式）で確実ダウンロード。</div>
+                <div class="command-desc">デフォルトの YouTube タイトルではなく、カスタムファイル名で保存します。AV1優先、無ければH.264、それも無ければ利用可能な最高画質を自動で選んでダウンロードし、mp4で保存します。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=h264][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]" -o "%(title)s.%(ext)s" "URL"</pre>
+                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1][ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best" --merge-output-format mp4 -o "%(title)s.%(ext)s" "URL"</pre>
                 </div>
             </div>
 
@@ -441,10 +442,10 @@
 
             <div class="command-item">
                 <div class="command-title">プレイリスト全体ダウンロード</div>
-                <div class="command-desc">YouTube プレイリストの全ての動画をダウンロードします。個別の URL ではなくプレイリストの URL を使用。AV1優先、次点でH.264（mp4形式）で確実ダウンロード。</div>
+                <div class="command-desc">YouTube プレイリストの全ての動画をダウンロードします。個別の URL ではなくプレイリストの URL を使用。AV1優先、無ければH.264、それも無ければ利用可能な最高画質を自動で選んでダウンロードし、mp4で保存します。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=h264][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]" "Playlist_URL"</pre>
+                    <pre class="command-code">yt-dlp -f "bestvideo[vcodec^=av01][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1][ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best" --merge-output-format mp4 "Playlist_URL"</pre>
                 </div>
             </div>
 
@@ -455,10 +456,73 @@
 
             <div class="command-item">
                 <div class="command-title">特定のフォーマット一覧を表示</div>
-                <div class="command-desc">その動画で利用可能なすべてのフォーマット（解像度、ファイル形式など）を表示します。ダウンロード前に品質を確認する時に使用します。</div>
+                <div class="command-desc">その動画で利用可能なすべてのフォーマット（解像度、ファイル形式など）を表示します。ダウンロード前に品質を確認する時に使用します。形式ID（137 など）は動画ごとに異なる場合があるため、まずこのコマンドで確認してください。</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                     <pre class="command-code">yt-dlp -F "URL"</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- トラブルシューティング・更新 -->
+        <div class="section" id="troubleshooting">
+            <h2>トラブルシューティング・更新</h2>
+
+            <div class="category-heading">
+                <span class="category-icon">⚠️</span>
+                <span>エラー: Requested format is not available</span>
+            </div>
+
+            <div class="info-box">
+                <h3>原因</h3>
+                <p>形式指定に <code>vcodec^=h264</code> と書くと一致しません。YouTube の H.264 は yt-dlp 上では <code>avc1</code> と表示されます。また、動画によっては AV1（av01）が提供されていないことがあります。「AV1優先」のコマンドは、AV1 → H.264（avc1）→ 利用可能な最高画質 → best の順に自動で試すため、通常はこのエラーになりません。</p>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">① 形式一覧を確認</div>
+                <div class="command-desc">利用可能な形式とコーデックを確認します。</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">yt-dlp -F "URL"</pre>
+                </div>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">② 形式IDを直接指定（例：1080pの映像137と音声140を結合）</div>
+                <div class="command-desc">形式IDは動画ごとに異なる場合があります。まず -F で確認してください。</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">yt-dlp -f "137+140" --merge-output-format mp4 -o "%(title)s.%(ext)s" "URL"</pre>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>コーデック名の対応</h3>
+                <p>H.264 = <code>avc1</code>、AV1 = <code>av01</code>、VP9 = <code>vp09</code>（<code>vp9</code> と表示される場合もあります）</p>
+                <p>自動選択で最後の段階（利用可能な最高画質）に落ちた場合、VP9 / Opus などになることがあります。mp4 に格納されても QuickTime で再生できない場合は、ffmpeg で H.264 に変換してください。</p>
+            </div>
+
+            <div class="category-heading">
+                <span class="category-icon">🐚</span>
+                <span>エラー: zsh: bad pattern</span>
+            </div>
+
+            <div class="info-box">
+                <h3>原因</h3>
+                <p>URL を入れる位置に yt-dlp コマンド全体を貼り付けてしまい、ダブルクォートが入れ子になっています。<code>"URL"</code> の位置には URL だけを入れてください。</p>
+            </div>
+
+            <div class="category-heading">
+                <span class="category-icon">🔄</span>
+                <span>yt-dlp の更新</span>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">yt-dlp を自己更新</div>
+                <div class="command-desc">~/.local/bin/yt-dlp に導入している場合の更新方法です（Homebrew ではないため brew upgrade yt-dlp は使えません）。最新安定版 stable@2026.08.19 を確認済みです。</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">yt-dlp -U</pre>
                 </div>
             </div>
         </div>
