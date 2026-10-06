@@ -503,6 +503,52 @@
             </div>
 
             <div class="category-heading">
+                <span class="category-icon">🚫</span>
+                <span>エラー: HTTP Error 403: Forbidden</span>
+            </div>
+
+            <div class="info-box">
+                <h3>原因</h3>
+                <p>動画情報の取得は成功していますが、映像データ（AV1 など）の配信URLが YouTube 側で拒否されています。形式指定の誤りではなく、クライアント制限や PO Token による保護が原因です。次の①〜④を順に試してください。</p>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">① yt-dlp を最新版に更新</div>
+                <div class="command-desc">YouTube の仕様変更に追従した版で解消することが多いです。</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">yt-dlp -U</pre>
+                </div>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">② ブラウザの Cookie を使う（1080p の例）</div>
+                <div class="command-desc">brave の部分は普段使っているブラウザ（chrome / safari など）に変更してください。</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">yt-dlp --remote-components ejs:github --cookies-from-browser brave -f "bestvideo[vcodec^=av01][height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1][height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=1080]+bestaudio/best[height<=1080]" --merge-output-format mp4 -o "%(title)s.%(ext)s" "URL"</pre>
+                </div>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">③ 取得クライアントを変更する</div>
+                <div class="command-desc">②に <code>--extractor-args</code> を加えて、別クライアント経由で配信URLを取得します。</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">yt-dlp --extractor-args "youtube:player_client=default,web_safari" --remote-components ejs:github --cookies-from-browser brave -f "bestvideo[vcodec^=av01][height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[vcodec^=avc1][height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=1080]+bestaudio/best[height<=1080]" --merge-output-format mp4 -o "%(title)s.%(ext)s" "URL"</pre>
+                </div>
+            </div>
+
+            <div class="command-item">
+                <div class="command-title">④ AV1 を避けて H.264 を使う</div>
+                <div class="command-desc">AV1 の URL だけが 403 になる場合の最終手段です。H.264（avc1）を優先します。</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">yt-dlp --cookies-from-browser brave -f "bestvideo[vcodec^=avc1][height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" --merge-output-format mp4 -o "%(title)s.%(ext)s" "URL"</pre>
+                </div>
+            </div>
+
+            <div class="category-heading">
                 <span class="category-icon">🐚</span>
                 <span>エラー: zsh: bad pattern</span>
             </div>
