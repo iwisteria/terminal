@@ -668,7 +668,7 @@
 
             <div class="command-item">
                 <div class="command-title">jpg</div>
-                <div class="command-desc">カレントディレクトリの全画像ファイル（HEIC・PNG・GIF・TIFF・TIF・BMP・WebP・AVIF）をJPEGに一括変換。元ファイルは残します（ImageMagick v7使用）</div>
+                <div class="command-desc">カレントディレクトリの全画像ファイル（HEIC・PNG・GIF・TIFF・TIF・BMP・WebP・AVIF）をJPEGに一括変換し、新しいフォルダ jpg_converted にまとめて保存。元ファイルは残します（ImageMagick v7使用）</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                     <pre class="command-code">jpg</pre>
@@ -1657,14 +1657,14 @@ done</pre>
                     </div>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
-                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリ内の画像ファイル（HEIC・PNG・GIF・TIFF・TIF・BMP・WebP・AVIF）をJPEG形式に一括変換します。元ファイルは削除せず、同名の .jpg ファイルを生成します。</p>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリ内の画像ファイル（HEIC・PNG・GIF・TIFF・TIF・BMP・WebP・AVIF）をJPEG形式に一括変換します。元ファイルは削除せず、同名の .jpg ファイルを新しいフォルダ jpg_converted の中に生成します。</p>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
                     <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
                         <ol style="margin-left: 1.5rem; color: #2d3748;">
                             <li>変換したい画像があるフォルダをターミナルで開く</li>
                             <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">jpg</code> と入力して実行</li>
-                            <li>各ファイルと同名の .jpg ファイルが同じフォルダに生成されます</li>
+                            <li>各ファイルと同名の .jpg ファイルが、カレントディレクトリ内の jpg_converted フォルダに生成されます</li>
                         </ol>
                     </div>
 
@@ -1672,7 +1672,9 @@ done</pre>
                     <ul style="margin-left: 1.5rem; color: #2d3748;">
                         <li>入力形式: HEIC / heic, PNG / png, GIF / gif, TIFF / tiff / TIF / tif, BMP / bmp, WebP / webp, AVIF / avif</li>
                         <li>出力形式: JPEG (.jpg)</li>
+                        <li>出力先: jpg_converted フォルダ（自動作成。対象画像がない場合は作成されません）</li>
                         <li>元ファイルは削除しない（上書きなし）</li>
+                        <li>jpg_converted 内に同名の .jpg が既にある場合は上書きされます</li>
                         <li>NULL_GLOB で対象拡張子がない場合のエラーを回避</li>
                         <li>ImageMagick v7（magick コマンド）を使用</li>
                     </ul>
@@ -1683,8 +1685,9 @@ done</pre>
                         <p style="color: #2d3748; margin-bottom: 0.75rem;">以下のコマンドを実行するとエイリアスが登録されます:</p>
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">echo 'alias jpg='"'"'setopt NULL_GLOB; for f in *.heic *.HEIC *.png *.PNG *.gif *.GIF *.tiff *.tif *.TIFF *.TIF *.bmp *.BMP *.webp *.WebP *.avif *.AVIF; do [ -f "$f" ] && magick "$f" "${f%.*}.jpg"; done; unsetopt NULL_GLOB'"'"'' >> ~/.zshrc && source ~/.zshrc</pre>
+                            <pre class="command-code">echo 'alias jpg='"'"'setopt NULL_GLOB; for f in *.heic *.HEIC *.png *.PNG *.gif *.GIF *.tiff *.tif *.TIFF *.TIF *.bmp *.BMP *.webp *.WebP *.avif *.AVIF; do [ -f "$f" ] && mkdir -p jpg_converted && magick "$f" "jpg_converted/${f%.*}.jpg"; done; unsetopt NULL_GLOB'"'"'' >> ~/.zshrc && source ~/.zshrc</pre>
                         </div>
+                        <p style="color: #718096; margin-top: 0.75rem;">※ 以前のjpgエイリアスを登録済みの場合も、このコマンドを実行すれば後から追記した定義が優先されます（古い行は ~/.zshrc から削除しても構いません）。</p>
                     </div>
                 </div>
             </div>
