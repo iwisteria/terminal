@@ -390,6 +390,37 @@
                 <div class="alias-tag" style="background-color: #fff3cd; color: #856404; border: 1px solid #ffc107; border-radius: 6px; padding: 0.5rem 0.75rem; margin-top: 0.75rem; font-weight: 600;">⚠️ 削除したファイルは元に戻せません。実行前に必ず対象を確認してください</div>
                 <button class="shortcut-button" onclick="openModal('rmModal')" style="margin-top: 1rem;">📖 コマンドの詳細を見る</button>
             </div>
+
+            <div class="command-item">
+                <div class="command-title">カレントディレクトリの中身をすべて完全に削除（短縮名: delall）</div>
+                <div class="command-desc">サブディレクトリの中身や、ドットで始まる隠しファイル（.DS_Storeなど）を含めて、カレントディレクトリ内のすべてを削除します（カレントディレクトリ自体は残ります）</div>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">find . -mindepth 1 -delete</pre>
+                </div>
+                <h4 style="color: #6b5b0f; margin-top: 1rem; margin-bottom: 0.5rem;">🔧 ~/.zshrc への追加（短縮名 delall）</h4>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">cat >> ~/.zshrc << 'EOF'
+unalias delall 2>/dev/null
+delall() {
+  print -- "削除対象フォルダ: ${PWD}"
+  print -- "削除される項目数: $(find . -mindepth 1 | wc -l | tr -d ' ') 件（サブディレクトリ・隠しファイル含む）"
+  local confirm
+  read "confirm?本当にすべて完全に削除しますか？ (y/n): "
+  if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+    print -- "中止しました。"
+    return 1
+  fi
+  find . -mindepth 1 -delete && print -- "削除しました。"
+}
+EOF
+source ~/.zshrc</pre>
+                </div>
+                <div class="alias-tag">使用方法: 登録後は、削除したいフォルダで「delall」と入力 → 削除対象と件数が表示され、y/n で確認してから削除</div>
+                <div class="alias-tag" style="background-color: #fff3cd; color: #856404; border: 1px solid #ffc107; border-radius: 6px; padding: 0.5rem 0.75rem; margin-top: 0.75rem; font-weight: 600;">⚠️ ゴミ箱を経由せず完全に削除され、元に戻せません。delall は削除前に y/n で確認されますが、実行前に必ず pwd で場所を確認してください</div>
+                <button class="shortcut-button" onclick="openModal('rmAllModal')" style="margin-top: 1rem;">📖 コマンドの詳細を見る</button>
+            </div>
         </div>
     </div>
 
@@ -455,6 +486,80 @@
 $ echo ./*
 file1.txt file2.txt notes.md
 $ rm -f ./*</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全ファイル完全削除コマンド詳細モーダル -->
+    <div id="rmAllModal" class="modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2>🗑️ 全ファイル完全削除コマンドの詳細</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="info-box">
+                    <h3>基本コマンド</h3>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">find . -mindepth 1 -delete</pre>
+                    </div>
+                </div>
+
+                <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 動作説明</h3>
+                <ul style="margin-left: 1.5rem; color: #2d3748;">
+                    <li style="margin-bottom: 0.5rem;"><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">find .</code> : カレントディレクトリ以下をサブディレクトリも含めて再帰的に探索します</li>
+                    <li style="margin-bottom: 0.5rem;"><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-mindepth 1</code> : カレントディレクトリ自体（深さ0）を除外し、その中身だけを対象にします</li>
+                    <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-delete</code> : 見つかったファイル・ディレクトリを削除します（ディレクトリは中身から順に削除されます）</li>
+                </ul>
+                <p style="color: #718096; margin-top: 1rem;">ワイルドカード（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">*</code>）を使わないため、隠しファイルの有無に関わらずエラーなく動作します。</p>
+
+                <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚡ 短縮名 delall</h3>
+                <p style="color: #718096; margin-bottom: 1rem;">以下を一度実行して <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">~/.zshrc</code> に登録すると、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">delall</code> の入力だけで同じ処理を実行できます。削除前に削除対象と件数を表示し、y/n で確認します。ただし誤ったフォルダで y を入力すると元に戻せないため、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">pwd</code> で場所を確認してから使ってください。</p>
+                <div class="code-wrapper">
+                    <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                    <pre class="command-code">cat >> ~/.zshrc << 'EOF'
+unalias delall 2>/dev/null
+delall() {
+  print -- "削除対象フォルダ: ${PWD}"
+  print -- "削除される項目数: $(find . -mindepth 1 | wc -l | tr -d ' ') 件（サブディレクトリ・隠しファイル含む）"
+  local confirm
+  read "confirm?本当にすべて完全に削除しますか？ (y/n): "
+  if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+    print -- "中止しました。"
+    return 1
+  fi
+  find . -mindepth 1 -delete && print -- "削除しました。"
+}
+EOF
+source ~/.zshrc</pre>
+                </div>
+
+                <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 rm -rf との違い</h3>
+                <p style="color: #718096; margin-bottom: 1rem;"><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">rm -rf ./* ./.[!.]*</code> でも同様に削除できますが、macOSのzshでは隠しファイルが1つもないとき「no matches found」エラーでコマンド全体が中断されます。また <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">..foo</code> のようにドット2つで始まる名前は削除されません。<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">find</code> を使う方法ならこれらの問題がありません。</p>
+
+                <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚠️ 注意事項</h3>
+                <ul style="margin-left: 1.5rem; color: #2d3748;">
+                    <li>ゴミ箱を経由せず完全に削除されるため、元に戻せません</li>
+                    <li>実行前に <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">pwd</code> でカレントディレクトリの場所を確認する（ホームフォルダやルートで実行しない）</li>
+                    <li>実行前に <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">find . -mindepth 1</code> で削除対象の一覧を確認する（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">-delete</code> を外すと一覧表示のみで削除されません）</li>
+                </ul>
+
+                <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💻 使用例</h3>
+                <div class="info-box" style="background-color: #f7fafc; border-left-color: #4299e1;">
+                    <p style="color: #2d3748; margin-bottom: 1rem;"><strong>安全な手順（確認してから削除）</strong></p>
+                    <div class="code-wrapper" style="margin-top: 0.75rem;">
+                        <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
+                        <pre class="command-code">$ pwd
+/Users/example/Desktop/work
+$ find . -mindepth 1 | head -20
+./.DS_Store
+./photos
+./photos/img1.jpg
+./notes.md
+$ find . -mindepth 1 -delete</pre>
                     </div>
                 </div>
             </div>
