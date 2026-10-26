@@ -908,7 +908,7 @@
 
             <div class="command-item">
                 <div class="command-title">splitpdf</div>
-                <div class="command-desc">カレントディレクトリのPDFをページごとに分割</div>
+                <div class="command-desc">カレントディレクトリのPDFをページごとに分割し、新しいフォルダ split_converted にまとめて保存</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                     <pre class="command-code">splitpdf</pre>
@@ -2644,7 +2644,7 @@ PYTHON_EOF
                     </div>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">🔍 コマンドの動作説明</h3>
-                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリのPDFファイルをページごとに分割します。複数ページのPDFを1ページずつ独立したPDFファイルに分割できます。</p>
+                    <p style="color: #718096; margin-bottom: 1rem;">カレントディレクトリのPDFファイルをページごとに分割します。複数ページのPDFを1ページずつ独立したPDFファイルに分割できます。生成したPDFは新しいフォルダ split_converted にまとめて保存されます。</p>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">💡 使用方法</h3>
                     <div class="info-box" style="background-color: #fffaf0; border-left-color: #ed8936;">
@@ -2652,7 +2652,7 @@ PYTHON_EOF
                             <li>Finderで分割したいPDFのあるフォルダを開く</li>
                             <li>フォルダで「新規ターミナルでフォルダに移動」を選択</li>
                             <li>開いたターミナルで<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">splitpdf</code>コマンドを実行</li>
-                            <li>各ページが個別のPDFファイルになって同じフォルダに出力されます</li>
+                            <li>各ページが個別のPDFファイルになって新しいフォルダ split_converted の中に出力されます</li>
                         </ol>
                     </div>
 
@@ -2661,6 +2661,7 @@ PYTHON_EOF
                         <li>処理場所: カレントディレクトリ</li>
                         <li>分割単位: 1ページ</li>
                         <li>出力形式: PDF</li>
+                        <li>出力先: split_converted フォルダ（自動作成。同名ファイルは上書き）</li>
                         <li>ファイル名: 元のファイル名 + ページ番号</li>
                     </ul>
 
@@ -2668,8 +2669,9 @@ PYTHON_EOF
                     <div class="code-wrapper" style="margin-top: 0.75rem;">
                         <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                         <pre class="command-code">splitpdf() {
+  mkdir -p split_converted
   for file in *.pdf; do
-    pdftk "$file" burst output "$(basename "$file" .pdf)page%04d.pdf"
+    pdftk "$file" burst output "split_converted/$(basename "$file" .pdf)page%04d.pdf"
   done
   rm -f doc_data.txt
 }</pre>
