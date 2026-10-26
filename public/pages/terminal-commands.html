@@ -709,10 +709,10 @@
 
             <div class="command-item" id="persp">
                 <div class="command-title">persp</div>
-                <div class="command-desc">書類を撮影・変換した画像（HEIC等）の台形状の歪みを補正。罫線の外枠（上下左右の4本）から四隅を求め、遠近補正（射影変換）で長方形に戻し、元の名前_fixed.png と確認用の元の名前_fixed_debug.png を出力（OpenCVを使用）</div>
+                <div class="command-desc">書類を撮影・変換した画像（HEIC等）の台形状の歪みを補正。罫線の外枠（上下左右の4本）から四隅を求め、遠近補正（射影変換）で長方形に戻し、新しいフォルダ persp_converted に 元の名前_fixed.png と確認用の元の名前_fixed_debug.png を出力。引数なしならカレントフォルダの画像（heic/jpg/jpeg/png）を一括処理（OpenCVを使用）</div>
                 <div class="code-wrapper">
                     <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                    <pre class="command-code">persp *.heic</pre>
+                    <pre class="command-code">persp</pre>
                 </div>
                 <button class="shortcut-button" onclick="openModal('perspModal')" style="margin-top: 1rem;">📖 関数の詳細を見る</button>
             </div>
@@ -4389,7 +4389,7 @@ source ~/.zshrc</pre>
                         <h3>実行コマンド</h3>
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
-                            <pre class="command-code">persp *.heic</pre>
+                            <pre class="command-code">persp</pre>
                         </div>
                     </div>
 
@@ -4401,17 +4401,18 @@ source ~/.zshrc</pre>
                         <ol style="margin-left: 1.5rem; color: #2d3748;">
                             <li>画像をデスクトップの「作業フォルダ」に入れる</li>
                             <li>「作業フォルダ」を右クリックし、「フォルダに新規ターミナル」を選ぶ</li>
-                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">persp *.heic</code> を入力してReturnを押す</li>
+                            <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">persp</code> を入力してReturnを押す（フォルダ内のheic/jpg/jpeg/pngをすべて処理）</li>
                         </ol>
                     </div>
                     <ul style="margin-left: 1.5rem; color: #2d3748; margin-top: 1rem;">
-                        <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">*.heic</code> は、そのフォルダ内の拡張子 .heic のファイルすべてを意味する</li>
-                        <li>PNG・JPEGの場合は <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">persp *.png</code>、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">persp *.jpg</code></li>
+                        <li>引数なしの場合、処理済みの <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">_fixed.png</code> / <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">_fixed_debug.png</code> は対象外</li>
+                        <li>特定のファイルだけ処理する場合は <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">persp *.heic</code> のように指定（<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">*.heic</code> はそのフォルダ内の拡張子 .heic のファイルすべてを意味する）</li>
                         <li>1枚だけの場合は <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">persp A.heic</code>、またはファイルをターミナルへドラッグ</li>
                     </ul>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">⚙️ 出力と確認方法</h3>
                     <ul style="margin-left: 1.5rem; color: #2d3748;">
+                        <li>出力は新しいフォルダ <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">persp_converted</code> に格納（元ファイルは変更しない）</li>
                         <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">元の名前_fixed.png</code>: 補正後の画像</li>
                         <li><code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">元の名前_fixed_debug.png</code>: 四隅の算出に使った4本の線を赤で描いた確認用画像</li>
                         <li>確認用画像の赤線が外枠の罫線に乗っていれば、補正結果はそのまま使える</li>
@@ -4419,16 +4420,38 @@ source ~/.zshrc</pre>
                         <li>環境: Mac、uv、OpenCV（opencv-python-headless）、numpy、ImageMagick（magick）</li>
                     </ul>
 
-                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 関数の登録（初回のみ・設定済み）</h3>
+                    <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📋 関数の登録（初回のみ）</h3>
                     <div class="info-box" style="background-color: #fef5e7; border-left-color: #f39c12;">
-                        <h3 style="color: #6b5b0f;">🔧 ~/.zshrc への追加</h3>
-                        <p style="color: #2d3748; margin-bottom: 0.75rem;">以下のコマンドを実行すると関数 <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">persp</code> が登録されます:</p>
+                        <h3 style="color: #6b5b0f;">🔧 ~/.zshrc.d/functions.sh への追加</h3>
+                        <p style="color: #2d3748; margin-bottom: 0.75rem;">先に下の persp.py を ~/scripts/persp.py として保存してから、以下のコマンドを実行すると関数 <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">persp</code> が登録されます:</p>
                         <div class="code-wrapper" style="margin-top: 0.75rem;">
                             <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                             <pre class="command-code">mkdir -p ~/scripts
-cat &gt;&gt; ~/.zshrc &lt;&lt; 'EOF'
-persp() { for f in "$@"; do uv run --with opencv-python-headless --with numpy python ~/scripts/persp.py "$f" "${f:r}_fixed.png"; done; }
-EOF
+cat &gt;&gt; ~/.zshrc.d/functions.sh &lt;&lt; 'FUNCEOF'
+
+# 書類画像の台形歪み補正。引数なしならカレントフォルダの画像(heic/jpg/jpeg/png)を一括処理
+# 出力は新規フォルダ persp_converted に格納（{名前}_fixed.png と {名前}_fixed_debug.png）
+persp() {
+  emulate -L zsh
+  setopt local_options nullglob nocaseglob
+  local -a files
+  if (( $# &gt; 0 )); then
+    files=("$@")
+  else
+    files=(*.heic *.jpg *.jpeg *.png)
+    files=(${files:#*_fixed.png} ${files:#*_fixed_debug.png})
+  fi
+  if (( ${#files[@]} == 0 )); then
+    print -u2 "エラー: 対象の画像（heic/jpg/jpeg/png）が見つかりません。"
+    return 1
+  fi
+  mkdir -p persp_converted
+  local f
+  for f in "${files[@]}"; do
+    uv run --with opencv-python-headless --with numpy python ~/scripts/persp.py "$f" "persp_converted/${${f:t}:r}_fixed.png"
+  done
+}
+FUNCEOF
 source ~/.zshrc</pre>
                         </div>
                     </div>
@@ -4492,7 +4515,7 @@ cv2.imwrite(os.path.splitext(dst)[0] + "_debug.png", dbg)</pre>
 
                     <h3 style="color: #2d3748; margin-top: 1.5rem; margin-bottom: 1rem;">📝 備考</h3>
                     <ul style="margin-left: 1.5rem; color: #2d3748;">
-                        <li>動作確認済み（2026年10月26日）</li>
+                        <li>動作確認済み（2026年10月27日）</li>
                         <li>OpenCVの新しい版では線の検出結果の配列形状が変わるため、<code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">lines[:, 0]</code> ではなく <code style="background-color: #1a202c; color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px;">lines.reshape(-1, 4)</code> を使う</li>
                         <li>台形歪みの補正用。回転・せん断のずれには、別途の傾き補正スクリプト（deskew.py）を使う</li>
                     </ul>
