@@ -2669,11 +2669,17 @@ PYTHON_EOF
                     <div class="code-wrapper" style="margin-top: 0.75rem;">
                         <button class="copy-button" onclick="copyToClipboard(this)">コピー</button>
                         <pre class="command-code">splitpdf() {
+  local pdf_files=(*.pdf(N))
+  if [[ ${#pdf_files[@]} -eq 0 ]]; then
+    echo "エラー: カレントディレクトリに PDF ファイルが見つかりません" >&2
+    return 1
+  fi
   mkdir -p split_converted
-  for file in *.pdf; do
+  for file in "${pdf_files[@]}"; do
+    [ -f "$file" ] || continue
     pdftk "$file" burst output "split_converted/$(basename "$file" .pdf)page%04d.pdf"
   done
-  rm -f doc_data.txt
+  rm -f doc_data.txt split_converted/doc_data.txt
 }</pre>
                     </div>
                 </div>
